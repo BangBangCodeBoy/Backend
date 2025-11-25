@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mappper namespace="com.codeboy.mvc.model.dao.QuizRoomDao">
+<mapper namespace="com.codeboy.mvc.model.dao.QuizRoomDao">
 
 	<!-- 채팅방 생성 -->
 	<insert id="insertQuizRoom" useGeneratedKeys="true"
@@ -19,7 +19,7 @@
 		parameterType="QuizRoomMember">
 		INSERT INTO
 		quiz_room_member(member_id, room_id, is_host)
-		VALUES(#{memberId, roomId, isHost});
+		VALUES(#{memberId}, #{roomId}, #{isHost});
 	</insert>
 
 
@@ -48,4 +48,4 @@
 	</delete>
 
 
-</mappper>
+</mapper>

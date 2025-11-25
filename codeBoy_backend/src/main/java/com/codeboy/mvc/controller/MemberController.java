@@ -22,11 +22,11 @@ public class MemberController {
 	public String signup(@ModelAttribute Member member){
 		return "회원가입 성공?";
 	}
-
-	@GetMapping(){
-		
-	}
-	
+//
+//	@GetMapping(){
+//		
+//	}
+//	
 	
 
 }

@@ -1,12 +1,54 @@
 package com.codeboy.mvc.model.service;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.codeboy.mvc.model.dao.CommentDao;
 import com.codeboy.mvc.model.dto.Comment;
 
+@Service
 public class CommentServiceImpl implements CommentService {
-    @Override
-    public List<Comment> getAllCommentsById(int userProblemSetId) {
-        return null;
-    }
-    //유저제작 문제 세트Id로 조회
 
+	private final CommentDao commentDao;
+
+	@Autowired
+	public CommentServiceImpl(CommentDao commentDao) {
+		this.commentDao = commentDao;
+	}
+
+	
+	
+	// 유저제작 문제 세트Id로 조회
+	@Override
+	public List<Comment> getAllCommentsById(long userProblemSetId) {
+		return commentDao.selectCommentsByuserProblemSetId(userProblemSetId);
+	}
+	
+	@Override
+	public int addComment(long userProblemSetId, Comment comment ) {
+		return commentDao.insertComment(userProblemSetId, comment);
+	}
+
+
+
+	@Override
+	public int updateComment(long commentId, Comment comment) {
+		return commentDao.updateComment(commentId, comment);
+		
+	}
+
+
+
+	@Override
+	public int deleteComment(long commentId) {
+		return commentDao.deleteComment(commentId);
+		
+	}
+
+	
+	
+	
+	
 }
