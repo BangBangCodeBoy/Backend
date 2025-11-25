@@ -22,5 +22,5 @@ public class Problem {
     private String choice4;
     private String answer;
     private Category category;
-    
+
 }

@@ -1,7 +1,9 @@
 package com.codeboy.mvc.model.dto;
 
 import java.sql.Timestamp;
+
 import com.codeboy.common.Status;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

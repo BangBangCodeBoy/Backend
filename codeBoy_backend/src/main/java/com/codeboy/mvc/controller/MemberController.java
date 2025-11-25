@@ -13,20 +13,20 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RequestMapping("/api-member")
 @Tag(name="Member RESTful API", description = "Member CRUD를 할 수 있는 REST API")
 public class MemberController {
-	
+
 //	@Autowired
 //	private MemberService memberService;
-	
-	
+
+
 	@PostMapping("/signup")
 	public String signup(@ModelAttribute Member member){
 		return "회원가입 성공?";
 	}
 
 	@GetMapping(){
-		
+
 	}
-	
-	
+
+
 
 }

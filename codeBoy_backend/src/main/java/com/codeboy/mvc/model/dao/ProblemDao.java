@@ -8,5 +8,5 @@ import com.codeboy.mvc.model.dto.Problem;
 public interface ProblemDao {
 	//문제 조회
 	public List<Problem> selectProblem(Category category);
-	
+
 }

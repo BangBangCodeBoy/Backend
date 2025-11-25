@@ -11,7 +11,7 @@ public interface IncorrectNoteDao {
 
     //유저가 자신의 오답노트 안에서 문제를 삭제
     public void deleteIncorrectProblem(long memberId, long problemId);
-    
+
     //오답노트에 문제 추가
     public void insertIncorrectProblem(long memberId, long problemId);
 }
