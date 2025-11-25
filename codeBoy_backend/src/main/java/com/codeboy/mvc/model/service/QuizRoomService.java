@@ -17,7 +17,7 @@ public interface QuizRoomService {
 	public void joinQuizRoom(long memberId, long quizRoomId);
 	
 	//퀴즈룸 삭제
-	public boolean deleteQuizRoom()
+//	public boolean deleteQuizRoom()
 	
 	
 }

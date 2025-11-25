@@ -1,10 +1,41 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.codeboy.mvc.model.dao.MemberDao">
 
-    <!-- select/insert/update/delete … -->
-   
+
+    <insert id="insertMember" parameterType="com.codeboy.mvc.model.dto.Member"
+            useGeneratedKeys="true" keyProperty="memberId">
+        <!--회원을 디비에 저장 -->    
+        INSERT INTO member (ID, password, nickname, email, signup_Date, deleted_date, status)
+        VALUES (#{id}, #{password}, #{nickname}, #{email},
+                #{signupDate}, #{deletedDate}, #{status})
+    </insert>
+
+    <select id="selectMemberByMemberId" resultMap="memberResultMap">
+    <!-- 마이페이지에서 멤버아이디로 조회 단, 비활성상태이면 조회 못한다. -->
+        SELECT *
+        FROM member
+        WHERE member_id = #{memberId}
+          AND status != 'INACTIVE'
+    </select>
+	
+	
+    <update id="updateMember" parameterType="com.codeboy.mvc.model.dto.Member">
+        UPDATE member
+        SET nickname   = #{nickname},
+            email      = #{email},
+            password   = #{password},
+        WHERE member_id = #{memberId}
+    </update>
+
+    <update id="deactivateMember">
+        UPDATE member
+        SET status      = 'INACTIVE',
+           	deleted_date = #{deletedDate}
+        WHERE member_id = #{memberId}
+    </update>
 
 </mapper>

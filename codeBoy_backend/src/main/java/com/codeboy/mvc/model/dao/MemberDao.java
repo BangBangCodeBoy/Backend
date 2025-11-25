@@ -4,15 +4,16 @@ import com.codeboy.mvc.model.dto.Member;
 import com.codeboy.mvc.model.dto.MemberUpdateRequest;
 
 public interface MemberDao {
-    public void insertMember(Member member);
-    
-    public Member selectMember(String id, String password);
-    
-    //멤버 삭제 -> db에서는 status 변경 
-    public void delete(int memberId);
-    
-    //멤버 업데이트 -> db에서는 patch(nickname, email, id)
-    public void updateMember(long memberId, MemberUpdateRequest memberUpdateRequest);
-    
+	 // 회원 가입
+    int insertMember(Member member);
+
+    // PK로 조회
+    Member selectMemberByMemberId(long memberId);
+
+    // 닉네임/이메일/비밀번호 수정
+    int updateMember(long memberId, Member member);
+
+    // 회원 비활성화(탈퇴) - status, isDeleted 업데이트
+    int deleteMember(long memberId);
     
 }
