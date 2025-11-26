@@ -1,4 +1,4 @@
-package com.codeboy.mvc.model.dto;
+package com.codeboy.mvc.model.requestDto;
 
 import lombok.*;
 
@@ -9,5 +9,4 @@ import lombok.*;
 @ToString
 public class CreateQuizRoomRequest {
     private long memberId;
-
 }

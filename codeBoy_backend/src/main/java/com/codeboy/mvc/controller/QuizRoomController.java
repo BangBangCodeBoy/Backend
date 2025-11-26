@@ -1,5 +1,8 @@
 package com.codeboy.mvc.controller;
 import com.codeboy.mvc.model.dto.*;
+import com.codeboy.mvc.model.requestDto.CreateQuizRoomRequest;
+import com.codeboy.mvc.model.requestDto.JoinQuizRoomRequest;
+import com.codeboy.mvc.model.responseDto.ApiResponse;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +22,7 @@ public class QuizRoomController {
     private DataSource dataSource;
 	
 	@Autowired
-	QuizRoomServiceImpl quizRoomService;
+	private QuizRoomServiceImpl quizRoomService;
 
     @PostConstruct
     public void testConnection() throws SQLException {
@@ -57,7 +60,7 @@ public class QuizRoomController {
 		if (!isOk) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(false, "호스트를 퀴즈방에 넣는 과정이 실패했습니다. ", null));
 		}
-		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>(true, "채팅방이 성공적으로 생성되었습니다.", quizRoomId));
+		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>(true, "퀴즈방이 성공적으로 생성되었습니다.", quizRoomId));
 	}
 
 	//채팅방 참여하기
@@ -91,9 +94,9 @@ public class QuizRoomController {
 		boolean isOk = quizRoomService.joinQuizRoom(quizRoomMember);
 
 		if (!isOk) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(false, "채팅방 입장에 실패하였습니다. ", null));
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(false, "퀴즈방 입장에 실패하였습니다. ", null));
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>(true, "채팅방 입장에 성공하였습니다.", null));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>(true, "퀴즈방 입장에 성공하였습니다.", null));
     }
 
     //채팅방 목록 보여주기
@@ -115,7 +118,7 @@ public class QuizRoomController {
     @GetMapping("/{roomId}/member")
     public ResponseEntity<ApiResponse<List<QuizRoomMember>>> getQuizRoomMembers(@PathVariable long roomId) {
         if (roomId <= 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>(false, "채팅방 ID가 유효하지 않습니다.", null));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>(false, "퀴즈방 ID가 유효하지 않습니다.", null));
         }
 
         List<QuizRoomMember> memberList = quizRoomService.getOneQuizRoomMember(roomId);
@@ -132,13 +135,13 @@ public class QuizRoomController {
     @DeleteMapping("/{roomId}")
     public ResponseEntity<ApiResponse<String>> deleteQuizRoom(@PathVariable long roomId) {
         if (roomId <= 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>(false, "채팅방 ID가 유효하지 않습니다.", null));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>(false, "퀴즈방 ID가 유효하지 않습니다.", null));
         }
         boolean isOk = quizRoomService.deleteQuizRoom(roomId);
         if (!isOk) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>(false, "채팅방 삭제에 실패했습니다.", null));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>(false, "퀴즈방 삭제에 실패했습니다.", null));
         }
-        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(true, "성공적으로 채팅방이 삭제되었습니다. ", null
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(true, "성공적으로 퀴즈방이 삭제되었습니다. ", null
         ));
     }
 

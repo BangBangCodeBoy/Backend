@@ -1,4 +1,4 @@
-package com.codeboy.mvc.model.dto;
+package com.codeboy.mvc.model.requestDto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

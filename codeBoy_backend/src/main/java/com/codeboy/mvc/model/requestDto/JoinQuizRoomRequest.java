@@ -1,4 +1,4 @@
-package com.codeboy.mvc.model.dto;
+package com.codeboy.mvc.model.requestDto;
 
 import lombok.*;
 

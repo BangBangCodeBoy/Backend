@@ -1,4 +1,4 @@
-package com.codeboy.mvc.model.dto;
+package com.codeboy.mvc.model.responseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
