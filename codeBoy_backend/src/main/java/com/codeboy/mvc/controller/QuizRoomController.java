@@ -140,8 +140,6 @@ public class QuizRoomController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(true, "성공적으로 채팅방이 삭제되었습니다. ", null
         ));
-
-
     }
 
 }
