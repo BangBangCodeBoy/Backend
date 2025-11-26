@@ -28,9 +28,11 @@ public class QuizRoomServiceImpl implements QuizRoomService{
     }
 
 	@Override
-	public int createQuizRoom() {
+	public long createQuizRoom() {
         QuizRoom room  = new QuizRoom();
-		return quizRoomDao.insertQuizRoom(room);
+        quizRoomDao.insertQuizRoom(room);
+        //생성된 채팅방 id 리턴
+		return room.getRoomId();
 
     }
 
@@ -50,5 +52,4 @@ public class QuizRoomServiceImpl implements QuizRoomService{
 		boolean ok = quizRoomDao.deleteQuizRoom(roomId);
 		return ok;
 	}
-
 }

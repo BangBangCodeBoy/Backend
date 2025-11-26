@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface QuizRoomDao {
 
 	//quiz_room 테이블. 퀴즈룸 생성. 생성된 퀴즈룸 id 반환
-	public int insertQuizRoom(QuizRoom room);
+	public void insertQuizRoom(QuizRoom room);
 
 	//quiz_room_member 테이블에 값 넣기 (퀴즈방 입장) - 참가자/호스트
 	public int insertMemberToQuizRoom(QuizRoomMember quizRoomMember);

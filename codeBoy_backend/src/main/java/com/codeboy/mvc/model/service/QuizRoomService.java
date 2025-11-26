@@ -14,7 +14,7 @@ public interface QuizRoomService {
 	public List<QuizRoom> getQuizRoomList();
 
 	//퀴즈 방 만들기 -> 생성된 퀴즈방 id를 return
-	public int createQuizRoom();
+	public long createQuizRoom();
 
     public  List<QuizRoomMember> getOneQuizRoomMember(long roomId);
 
