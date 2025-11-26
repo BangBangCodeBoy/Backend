@@ -12,8 +12,15 @@
 
     <delete id="deleteIncorrectProblem" parameterType="map">
         DELETE FROM incorrect_note
-        WHERE
-
+        WHERE incorrect_note_id = #{incorrectNoteId}
     </delete>
+
+
+    <insert id="insertIncorrectProblem" parameterType="map">
+        INSERT INTO incorrect_note (member_id, problem_id, user_problem_id, problem_type)
+        VALUES (#{memberId}, #{problemId}, #{userProblemId}, #{problemType})
+
+
+    </insert>
 
 </mapper>
