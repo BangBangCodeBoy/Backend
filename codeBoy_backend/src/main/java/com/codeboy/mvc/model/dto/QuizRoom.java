@@ -13,4 +13,6 @@ import lombok.Setter;
 @Schema(description="퀴즈방 DTO")
 public class QuizRoom {
     private long roomId;
+
+
 }

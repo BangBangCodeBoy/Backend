@@ -18,14 +18,14 @@ public class MemberController {
 //	private MemberService memberService;
 
 
-	@PostMapping("/signup")
-	public String signup(@ModelAttribute Member member){
-		return "회원가입 성공?";
-	}
-
-	@GetMapping(){
-
-	}
+//	@PostMapping("/signup")
+//	public String signup(@ModelAttribute Member member){
+//		return "회원가입 성공?";
+//	}
+//
+//	@GetMapping(){
+//
+//	}
 
 
 

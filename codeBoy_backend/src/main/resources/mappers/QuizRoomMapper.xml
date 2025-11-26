@@ -3,10 +3,11 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mappper namespace="com.codeboy.mvc.model.dao.QuizRoomDao">
+<mapper namespace="com.codeboy.mvc.model.dao.QuizRoomDao">
 
 	<!-- 채팅방 생성 -->
 	<insert id="insertQuizRoom" useGeneratedKeys="true"
+            parameterType="QuizRoom"
 		keyProperty="roomId">
 		INSERT INTO
 		quiz_room()
@@ -16,10 +17,11 @@
 
 	<!-- 채팅방 참가 -->
 	<insert id="insertMemberToQuizRoom"
-		parameterType="QuizRoomMember">
+		parameterType="QuizRoomMember"
+		>
 		INSERT INTO
 		quiz_room_member(member_id, room_id, is_host)
-		VALUES(#{memberId, roomId, isHost});
+		VALUES(#{memberId}, #{roomId}, #{isHost});
 	</insert>
 
 
@@ -39,13 +41,10 @@
 	</select>
 
 	<!-- 퀴즈룸 삭제 -->
-	<delete id="deleteQuizRoom" parameterType="long">
-		DELETE FROM quiz_room_member
-		WHERE room_id = #{roomId}
-
+    <delete id="deleteQuizRoom" parameterType="long">
 		DELETE FROM quiz_room
 		WHERE room_id = #{roomId};
 	</delete>
 
 
-</mappper>
+</mapper>
