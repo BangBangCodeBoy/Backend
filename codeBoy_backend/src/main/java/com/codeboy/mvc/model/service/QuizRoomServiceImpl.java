@@ -52,4 +52,8 @@ public class QuizRoomServiceImpl implements QuizRoomService{
 		boolean ok = quizRoomDao.deleteQuizRoom(roomId);
 		return ok;
 	}
+    @Override
+    public boolean existsQuizRoom(long roomId){
+        return quizRoomDao.existsQuizRoom(roomId) > 0;
+    }
 }

@@ -46,5 +46,12 @@
 		WHERE room_id = #{roomId};
 	</delete>
 
+<!--    퀴즈룸 존재 확인-->
+    <select id="existsQuizRoom" parameterType="long" resultType="int">
+        SELECT COUNT(*)
+        FROM quiz_room
+        WHERE room_id = #{roomId}
+    </select>
+
 
 </mapper>

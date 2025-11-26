@@ -30,4 +30,7 @@ public interface QuizRoomDao {
 	//퀴즈룸 삭제
 	public boolean deleteQuizRoom(long roomId);
 
+    //퀴즈룸 존재하는지 확인
+    public int existsQuizRoom(long roomId);
+
 }

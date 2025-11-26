@@ -23,4 +23,7 @@ public interface QuizRoomService {
 
 	//퀴즈룸 삭제
 	public boolean deleteQuizRoom(long roomId);
+
+    //방 존재 여부
+    public boolean existsQuizRoom(long roomId);
 }
