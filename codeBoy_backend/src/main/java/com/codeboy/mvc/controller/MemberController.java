@@ -1,17 +1,20 @@
 package com.codeboy.mvc.controller;
 
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.codeboy.mvc.model.requestDto.MemberUpdateRequest;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import com.codeboy.mvc.model.dto.Member;
-import com.codeboy.mvc.model.dto.LoginRequest;
-import com.codeboy.mvc.model.dto.MemberUpdateRequest;
+import com.codeboy.mvc.model.requestDto.LoginRequest;
 import com.codeboy.mvc.model.service.MemberService;
 
+import java.net.URI;
+
 @RestController
-@RequestMapping("/api/member")
+@RequestMapping("/api")
 @Tag(name="Member RESTful API", description = "Member CRUD를 할 수 있는 REST API")
 public class MemberController {
 
@@ -31,7 +34,7 @@ public class MemberController {
      *   400 잘못된 요청
      *   409 아이디/이메일 중복
      */
-    @PostMapping("/members")
+    @PostMapping("/member")
     public ResponseEntity<?> signUp(@RequestBody Member member) {
         // TODO: 아이디/이메일 중복 체크 로직은 나중에 추가
         int result = memberService.signUp(member);
@@ -85,7 +88,8 @@ public class MemberController {
      *   400 잘못된 요청
      *   401 인증 실패
      */
-    @PutMapping("/members/{memberId}")
+    //회원정보 전체를 업데이트하지않고 일부만 수정하는 거라서 Put에서 Patch매핑으로 변경
+    @PatchMapping("/members/{memberId}")
     public ResponseEntity<?> updateMe(@RequestBody MemberUpdateRequest request, @PathVariable long memberId ) {
         //파라미터로 memberId받아서 해당회원의 정보를 수정
 

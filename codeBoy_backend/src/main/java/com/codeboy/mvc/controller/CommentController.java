@@ -2,6 +2,7 @@ package com.codeboy.mvc.controller;
 
 import java.util.List;
 
+import com.codeboy.mvc.model.requestDto.CommentUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public class CommentController {
 	@GetMapping("{userProblemSetId}/comments")
 	public ResponseEntity<List<Comment>> getAllCommentsById(@PathVariable("userProblemSetId") long userProblemSetId){
 		List<Comment> comments = commentService.getAllCommentsById(userProblemSetId);
-		if(comments.size() > 0) {
+		if(!comments.isEmpty()) {
 			//성공적으로 댓글들을 조회한 경우 
 			return new ResponseEntity<List<Comment>>(comments, HttpStatusCode.valueOf(200));
 		}
@@ -53,9 +54,13 @@ public class CommentController {
 		
 	}
 	
-	@PutMapping("{userProblemSetId}/comments")
-	public ResponseEntity<String> updateComment(@PathVariable("commentId") long commentId, @RequestBody Comment comment){
-		int result = commentService.updateComment(commentId, comment);
+    //리소스의 일부(content)만 수정하므로 패치매핑
+	@PatchMapping("{userProblemSetId}/comments")
+	public ResponseEntity<String> updateComment(@PathVariable("commentId") long commentId, @RequestBody CommentUpdateRequest commentUpdateRequest){
+        Comment comment = new Comment();
+        //Dto를 통해서 받음
+        comment.setContent(commentUpdateRequest.getContent());
+        int result = commentService.updateComment(commentId, comment);
 		if(result == 1) {
 			//sql의 반환값이 1개면 댓글 업데이트에 성공
 			return new ResponseEntity<String>("댓글 수정 성공", HttpStatusCode.valueOf(200));
