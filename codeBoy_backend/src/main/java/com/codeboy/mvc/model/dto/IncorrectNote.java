@@ -1,6 +1,5 @@
 package com.codeboy.mvc.model.dto;
 
-import com.codeboy.common.ProblemType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,5 +16,5 @@ public class IncorrectNote {
     private long memberId;
     private long problemId;
     private long userProblemId;
-    private ProblemType ProblemType;
+    private Boolean isUserProblem;
 }

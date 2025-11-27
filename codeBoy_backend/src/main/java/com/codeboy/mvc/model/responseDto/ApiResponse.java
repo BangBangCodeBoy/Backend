@@ -13,6 +13,15 @@ public class ApiResponse<T> {
     private String message;
     private T data;
 
+    public static <T> ApiResponse<T> success(HttpStatus status, T data) {
+        return new ApiResponse<>(status, null, data);
+    }
 
-    // getter, setter 생략
+    public static <T> ApiResponse<T> success(HttpStatus status, String message, T data) {
+        return new ApiResponse<>(status, message, data);
+    }
+
+    public static<T>  ApiResponse<T> failure(HttpStatus status, String message) {
+        return new ApiResponse<>(status, message, null);
+    }
 }

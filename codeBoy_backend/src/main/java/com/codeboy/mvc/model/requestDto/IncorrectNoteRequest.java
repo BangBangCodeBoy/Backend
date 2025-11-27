@@ -1,6 +1,5 @@
 package com.codeboy.mvc.model.requestDto;
 
-import com.codeboy.common.ProblemType;
 import lombok.*;
 
 @NoArgsConstructor
@@ -11,5 +10,5 @@ import lombok.*;
 public class IncorrectNoteRequest {
     private Long problemId;
     private Long userProblemId;
-    private ProblemType problemType;
+    private Boolean isUserProblem;
 }

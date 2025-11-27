@@ -2,28 +2,51 @@ package com.codeboy.mvc.model.service;
 
 import java.util.List;
 
-import com.codeboy.mvc.model.dto.Member;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import com.codeboy.mvc.model.dao.QuizRoomDao;
 import com.codeboy.mvc.model.dto.QuizRoom;
 import com.codeboy.mvc.model.dto.QuizRoomMember;
+import org.springframework.stereotype.Service;
+
 @Service
-public interface QuizRoomService {
+public class QuizRoomService{
+	@Autowired
+	private QuizRoomDao quizRoomDao;
 
-	//퀴즈방 전체 조회
-	public List<QuizRoom> getQuizRoomList();
 
-	//퀴즈 방 만들기 -> 생성된 퀴즈방 id를 return
-	public long createQuizRoom();
+	public List<QuizRoom> getQuizRoomList() {
+		return quizRoomDao.selectAllQuizRoom();
+	}
 
-    public  List<QuizRoomMember> getOneQuizRoomMember(long roomId);
+    public List<QuizRoomMember> getOneQuizRoomMember(long roomId) {
+        return quizRoomDao.selectOneQuizRoom( roomId);
 
-	//참가자 채팅방 입장
-	public boolean joinQuizRoom(QuizRoomMember quizRoomMember);
+    }
 
-	//퀴즈룸 삭제
-	public boolean deleteQuizRoom(long roomId);
+	public long createQuizRoom() {
+        QuizRoom room  = new QuizRoom();
+        quizRoomDao.insertQuizRoom(room);
+        //생성된 채팅방 id 리턴
+		return room.getRoomId();
 
-    //방 존재 여부
-    public boolean existsQuizRoom(long roomId);
+    }
+
+	public boolean joinQuizRoom(QuizRoomMember quizRoomMember) {
+		 int rowsAffected = quizRoomDao.insertMemberToQuizRoom(quizRoomMember);
+		 if (rowsAffected > 0) {
+			 return true;
+		 } else {
+			 return false;
+		 }
+
+	}
+
+	public boolean deleteQuizRoom(long roomId) {
+		boolean ok = quizRoomDao.deleteQuizRoom(roomId);
+		return ok;
+	}
+    public boolean existsQuizRoom(long roomId){
+        return quizRoomDao.existsQuizRoom(roomId) > 0;
+    }
 }
