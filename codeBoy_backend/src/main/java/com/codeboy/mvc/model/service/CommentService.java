@@ -14,6 +14,7 @@ public interface CommentService {
     public int updateComment(long commentId, Comment comment);
 //
     public int deleteComment(long commentId);
-    
-    
+
+    public Long getCommentOwnerId(long commentId);
+
 }

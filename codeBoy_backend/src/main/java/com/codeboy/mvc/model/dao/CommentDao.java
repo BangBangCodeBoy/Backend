@@ -18,4 +18,8 @@ public interface CommentDao {
 
     //조회된 댓글의 id를 가져와서 수정하고 삭제함.
     public int deleteComment(long commentId);
+    
+    //댓글아이디로 댓글 작성자의 아이디를 가져옴
+    public Long selectCommentOwnerId(long commentId);
+
 }

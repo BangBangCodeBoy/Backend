@@ -28,6 +28,7 @@ public class CommentServiceImpl implements CommentService {
 	
 	@Override
 	public int addComment(long userProblemSetId, Comment comment ) {
+
 		return commentDao.insertComment(userProblemSetId, comment);
 	}
 
@@ -48,7 +49,10 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	
-	
+	@Override
+    public Long getCommentOwnerId(long commentId){
+        return commentDao.selectCommentOwnerId(commentId);
+    }
 	
 	
 }
