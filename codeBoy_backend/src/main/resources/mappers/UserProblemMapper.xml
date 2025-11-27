@@ -34,7 +34,7 @@
             choice_3 = #{choice3},
             choice_4 = #{choice4},
             answer = #{answer},
-            comment_count = #{commentCount},
+            comment_count = #{commentCount}
         WHERE user_problem_id = #{userProblemId}
     </update>
     

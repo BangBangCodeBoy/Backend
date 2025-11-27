@@ -59,8 +59,8 @@ public class CommentController {
         int result = commentService.addComment(userProblemSetId, comment);
 
         if (result == 0) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(ApiResponse.failure(HttpStatus.INTERNAL_SERVER_ERROR, "댓글 추가 실패"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.failure(HttpStatus.BAD_REQUEST, "잘못된 요청. 댓글 추가 실패"));
         }
 
         return ResponseEntity.status(HttpStatus.CREATED)

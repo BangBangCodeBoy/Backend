@@ -17,7 +17,8 @@ public interface UserProblemDao extends ProblemDao{
     int updateUserProblem(UserProblem userProblem);
 
     //제작자 본인이 자신의 문제를 삭제하는 로직
-    int deleteUserProblem(Long userProblemId);
+    int deleteUserProblemById(Long userProblemId);
+
 
 }
 

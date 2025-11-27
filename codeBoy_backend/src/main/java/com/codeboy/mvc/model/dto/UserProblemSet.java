@@ -12,6 +12,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserProblemSet {
-	private long userProblemSetId;
-	private long memberId;
+	private Long userProblemSetId;
+	private Long memberId;
 }

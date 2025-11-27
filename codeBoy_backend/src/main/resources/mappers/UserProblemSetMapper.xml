@@ -5,7 +5,7 @@
 <mapper namespace="com.codeboy.mvc.model.dao.UserProblemSetDao">
 
     <!-- 모든 문제 세트들 조회   -->
-    <select id="selectUserProblemSets" returnType="UserProblemSet">
+    <select id="selectUserProblemSets" resultType="UserProblemSet">
         SELECT *
         FROM user_problem_set
     </select>
@@ -18,7 +18,10 @@
     </select>
 
     <!-- 문제 세트 등록  -->
-    <insert id="insertUserProblemSet">
+    <insert id="insertUserProblemSet"
+            parameterType="UserProblemSet"
+            useGeneratedKeys="true"
+            keyProperty="userProblemSetId">
         INSERT INTO user_problem_set (member_id)
         VALUES (#{memberId})
     </insert>
@@ -26,7 +29,7 @@
     <!-- 문제세트 삭제 -->
     <delete id="deleteUserProblemSetById">
         DELETE FROM user_problem_set
-        WHERE id = #{id}
+        WHERE user_problem_set_id = #{userProblemSetId}
     </delete>
 
 
