@@ -14,7 +14,6 @@
 		VALUES();
 	</insert>
 
-
 	<!-- 채팅방 참가 -->
 	<insert id="insertMemberToQuizRoom"
 		parameterType="QuizRoomMember"
@@ -35,9 +34,12 @@
 	<!-- 하나의 퀴즈룸 조회 -->
 	<select id="selectOneQuizRoom" resultType="QuizRoomMember"
 		parameterType="long">
-		SELECT *
-		FROM quiz_room_member
-		WHERE room_id = #{roomId}
+		SELECT
+            qrm.member_id,
+            m.nickname
+		FROM quiz_room_member qrm
+        JOIN member m ON qrm.member_id = m.member_id
+		WHERE qrm.room_id = #{roomId}
 	</select>
 
 	<!-- 퀴즈룸 삭제 -->
@@ -48,9 +50,16 @@
 
 <!--    퀴즈룸 존재 확인-->
     <select id="existsQuizRoom" parameterType="long" resultType="int">
-        SELECT COUNT(*) >= 1
+        SELECT COUNT(*)
         FROM quiz_room
         WHERE room_id = #{roomId}
+    </select>
+
+<!--    //멤버 존재 확인 -->
+    <select id="isDuplicatedMember" parameterType="long" resultType="int">
+        SELECT COUNT(1)
+        FROM quiz_room_member
+        WHERE member_id = #{memberId}
     </select>
 
 

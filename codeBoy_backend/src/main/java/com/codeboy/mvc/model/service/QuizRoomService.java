@@ -2,6 +2,7 @@ package com.codeboy.mvc.model.service;
 
 import java.util.List;
 
+import com.codeboy.mvc.model.responseDto.getQuizRoomMembersResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.codeboy.mvc.model.dao.QuizRoomDao;
@@ -22,10 +23,10 @@ public class QuizRoomService{
         return quizRooms;
 	}
 
-    public List<QuizRoomMember> getOneQuizRoomMember(long roomId) {
+    public List<getQuizRoomMembersResponse> getOneQuizRoomMember(long roomId) {
         validateRoomId(roomId);
 
-        List<QuizRoomMember> memberList = quizRoomDao.selectOneQuizRoom( roomId);
+        List<getQuizRoomMembersResponse> memberList = quizRoomDao.selectOneQuizRoom(roomId);
 
         if (!memberList.isEmpty()) {
             throw new IllegalStateException("퀴즈방에 참가자가 없습니다.");
@@ -47,6 +48,7 @@ public class QuizRoomService{
         Long memberId  = quizRoomMember.getMemberId();
         Long roomId = quizRoomMember.getRoomId();
         validateRoomId(roomId);
+        memberDuplicateCheck(memberId);
 
         //멤버 id가 실제로 존재하는지 확인
         if (memberId == null) {
@@ -68,8 +70,17 @@ public class QuizRoomService{
 	}
 
     private void validateRoomId(Long roomId) {
-        if (roomId == null || roomId <= 0 || !quizRoomDao.existsQuizRoom(roomId)) {
+        boolean existRoom = quizRoomDao.existsQuizRoom(roomId) > 0;
+        if (roomId == null || roomId <= 0 || !existRoom) {
             throw new IllegalArgumentException("퀴즈방 ID가 유효하지 않습니다. : " + roomId);
         }
     }
+
+    private void memberDuplicateCheck(Long memberId) {
+        boolean duplicated = quizRoomDao.isDuplicatedMember(memberId) > 0;
+        if (duplicated) {
+            throw new IllegalArgumentException("한 멤버는 하나의 채팅방에만 들어갈 수 있습니다.");
+        }
+    }
+
 }

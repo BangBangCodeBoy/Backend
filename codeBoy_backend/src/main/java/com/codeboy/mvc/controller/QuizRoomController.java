@@ -3,6 +3,7 @@ package com.codeboy.mvc.controller;
 import com.codeboy.mvc.model.dto.*;
 import com.codeboy.mvc.model.requestDto.JoinQuizRoomRequest;
 import com.codeboy.mvc.model.responseDto.ApiResponse;
+import com.codeboy.mvc.model.responseDto.getQuizRoomMembersResponse;
 import com.codeboy.mvc.model.service.QuizRoomService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +21,15 @@ public class QuizRoomController {
     }
 
     //호스트 - 퀴즈방 만들기
-    @PostMapping("/create")
+    //TODO : 테스트용으로 memberId를 PathVariable로 넘김
+    @PostMapping("/create/{memberId}")
     //TODO : 로그인 구현되면 memberId를 requestBody로 넘기지 말고 세션에서 가져오도록 하기
-    public ResponseEntity<ApiResponse<Long>> createQuizRoom() {
+    public ResponseEntity<ApiResponse<Long>> createQuizRoom(@PathVariable long memberId) {
         try {
             //새로운 채팅방 생성하기
             long quizRoomId = quizRoomService.createQuizRoom();
             //3. QuizRoomMember 객체 생성
-            Long memberId = 1L;
+//            Long memberId = 1L;
             QuizRoomMember quizRoomMember = new QuizRoomMember();
             //4. setter로 객체 만들기
             quizRoomMember.setMemberId(memberId);
@@ -80,11 +82,10 @@ public class QuizRoomController {
 
     //현재 참가자 목록 보여주기
     @GetMapping("/{roomId}/member")
-    public ResponseEntity<ApiResponse<List<QuizRoomMember>>> getQuizRoomMembers(@PathVariable long roomId) {
+    public ResponseEntity<ApiResponse<List<getQuizRoomMembersResponse>>> getQuizRoomMembers(@PathVariable long roomId) {
         try {
-        List<QuizRoomMember> memberList = quizRoomService.getOneQuizRoomMember(roomId);
+        List<getQuizRoomMembersResponse> memberList = quizRoomService.getOneQuizRoomMember(roomId);
 
-        //TODO : member API 와 연결해서 참가 중인 멤버 닉네임을 보여주도록?
             return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(HttpStatus.OK, "멤버 리스트를 반환합니다.", memberList));
 
         } catch (IllegalStateException | IllegalArgumentException e) {
