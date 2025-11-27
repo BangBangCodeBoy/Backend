@@ -5,9 +5,34 @@
 
 <mapper namespace="com.codeboy.mvc.model.dao.IncorrectNoteDao">
     <select id="selectIncorrectProblems" resultType="Problem" parameterType="long" >
-        SELECT *
-        FROM incorrect_note
-        WHERE member_id = #{memberId}
+        (SELECT
+            inote.incorrect_note_id,
+            p.problem_description,
+            p.choice_1 AS choice1,
+            p.choice_2 AS choice2,
+            p.choice_3 AS choice3,
+            p.choice_4 AS choice4,
+            p.answer,
+            p.category
+            FROM incorrect_note inote
+            JOIN problem p ON inote.problem_id = p.problem_id
+            WHERE inote.member_id = #{memberId}
+            AND inote.problem_type = 'PROBLEM'
+        ) UNION ALL
+        (SELECT
+        inote.incorrect_note_id,
+            p.problem_description,
+            p.choice_1 AS choice1,
+            p.choice_2 AS choice2,
+            p.choice_3 AS choice3,
+            p.choice_4 AS choice4,
+            p.answer,
+            p.category
+            FROM incorrect_note inote
+            JOIN user_problem u ON inote.problem_id = u.user_problem_id
+            WHERE inote.member_id = #{memberId}
+            AND inote.problem_type = 'USER_PROBLEM'
+        )
     </select>
 
     <delete id="deleteIncorrectProblem" parameterType="map">
