@@ -1,6 +1,7 @@
 package com.codeboy.mvc.model.service;
 
 import com.codeboy.mvc.model.dto.Member;
+import com.codeboy.mvc.model.requestDto.MemberUpdateRequest;
 
 public interface MemberService {
 
@@ -15,4 +16,6 @@ public interface MemberService {
 
     // 회원 비활성화(탈퇴)
     int deactivateMember(long memberId);
+    //회원정보 수정-> db에서는 patch(nickname, email, id)
+    public void updateMember(long memberId, MemberUpdateRequest memberUpdateRequest);
 }

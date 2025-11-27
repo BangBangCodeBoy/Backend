@@ -1,13 +1,9 @@
 package com.codeboy.mvc.controller;
 
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.codeboy.mvc.model.dto.Member;
 import com.codeboy.mvc.model.dto.LoginRequest;
@@ -15,7 +11,8 @@ import com.codeboy.mvc.model.dto.MemberUpdateRequest;
 import com.codeboy.mvc.model.service.MemberService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/member")
+@Tag(name="Member RESTful API", description = "Member CRUD를 할 수 있는 REST API")
 public class MemberController {
 
     private final MemberService memberService;
@@ -93,13 +90,13 @@ public class MemberController {
         //파라미터로 memberId받아서 해당회원의 정보를 수정
 
         Member member = memberService.getMemberByMemberId(memberId);
-        //회원을 못찾는 경우 ->존재하지 않는 memberId인경우 
+        //회원을 못찾는 경우 ->존재하지 않는 memberId인경우
         if (member == null) {
             return ResponseEntity
                     .status(HttpStatusCode.valueOf(401))
                     .body("인증된 회원을 찾을 수 없습니다.");
         }
-        
+
         //닉네임과 이메일은 바꿀 수 있다고 가정. 필요하면 ID도..?
         if (request.getNickName() != null) {
             member.setNickname(request.getNickName());
@@ -108,7 +105,7 @@ public class MemberController {
             member.setEmail(request.getEmail());
         }
 
-        
+
         int result = memberService.updateMember(memberId, member);
 
         if (result == 1) {

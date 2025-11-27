@@ -1,7 +1,7 @@
 package com.codeboy.mvc.model.dao;
 
 import com.codeboy.mvc.model.dto.Member;
-import com.codeboy.mvc.model.dto.MemberUpdateRequest;
+import com.codeboy.mvc.model.requestDto.MemberUpdateRequest;
 
 public interface MemberDao {
 	 // 회원 가입
