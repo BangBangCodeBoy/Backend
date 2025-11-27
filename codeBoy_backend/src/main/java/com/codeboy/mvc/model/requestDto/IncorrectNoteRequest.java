@@ -9,7 +9,6 @@ import lombok.*;
 @Setter
 @ToString
 public class IncorrectNoteRequest {
-    private Long memberId;
     private Long problemId;
     private Long userProblemId;
     private ProblemType problemType;

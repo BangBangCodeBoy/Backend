@@ -1,5 +1,6 @@
 package com.codeboy.mvc.model.responseDto;
 
+import com.codeboy.common.Category;
 import lombok.*;
 
 @Data
@@ -15,5 +16,5 @@ public class IncorrectNoteResponse {
     private String choice3;
     private String choice4;
     private String answer;
-    private String category;
+    private Category category;
 }

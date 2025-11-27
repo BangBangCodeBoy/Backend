@@ -21,13 +21,13 @@
         ) UNION ALL
         (SELECT
         inote.incorrect_note_id,
-            p.problem_description,
-            p.choice_1 AS choice1,
-            p.choice_2 AS choice2,
-            p.choice_3 AS choice3,
-            p.choice_4 AS choice4,
-            p.answer,
-            p.category
+            u.problem_description,
+            u.choice_1 AS choice1,
+            u.choice_2 AS choice2,
+            u.choice_3 AS choice3,
+            u.choice_4 AS choice4,
+            u.answer,
+            u.category
             FROM incorrect_note inote
             JOIN user_problem u ON inote.problem_id = u.user_problem_id
             WHERE inote.member_id = #{memberId}
@@ -35,13 +35,13 @@
         )
     </select>
 
-    <delete id="deleteIncorrectProblem" parameterType="map">
+    <delete id="deleteIncorrectProblem"  parameterType="map">
         DELETE FROM incorrect_note
         WHERE incorrect_note_id = #{incorrectNoteId}
     </delete>
 
 
-    <insert id="insertIncorrectProblem" parameterType="map">
+    <insert id="insertIncorrectProblem" useGeneratedKeys="true" parameterType="map">
         INSERT INTO incorrect_note (member_id, problem_id, user_problem_id, problem_type)
         VALUES (#{memberId}, #{problemId}, #{userProblemId}, #{problemType})
 
