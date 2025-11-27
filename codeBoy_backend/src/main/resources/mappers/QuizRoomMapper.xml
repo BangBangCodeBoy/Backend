@@ -48,7 +48,7 @@
 
 <!--    퀴즈룸 존재 확인-->
     <select id="existsQuizRoom" parameterType="long" resultType="int">
-        SELECT COUNT(*)
+        SELECT COUNT(*) >= 1
         FROM quiz_room
         WHERE room_id = #{roomId}
     </select>

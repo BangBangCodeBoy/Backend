@@ -8,29 +8,23 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface QuizRoomDao {
-
 	//quiz_room 테이블. 퀴즈룸 생성. 생성된 퀴즈룸 id 반환
 	public void insertQuizRoom(QuizRoom room);
 
 	//quiz_room_member 테이블에 값 넣기 (퀴즈방 입장) - 참가자/호스트
 	public int insertMemberToQuizRoom(QuizRoomMember quizRoomMember);
-
-
 	//모든 퀴즈룸 조회하기
 	public List<QuizRoom> selectAllQuizRoom();
 
-
-
 	//하나의 퀴즈룸 조회(참가 멤버확인)
-	public List<QuizRoomMember> selectOneQuizRoom(long roomId);
+	public List<QuizRoomMember> selectOneQuizRoom(Long roomId);
 
 	//퀴즈룸 수정
 
-
 	//퀴즈룸 삭제
-	public boolean deleteQuizRoom(long roomId);
+	public boolean deleteQuizRoom(Long roomId);
 
     //퀴즈룸 존재하는지 확인
-    public int existsQuizRoom(long roomId);
+    public boolean existsQuizRoom(Long roomId);
 
 }

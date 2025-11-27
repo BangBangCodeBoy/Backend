@@ -1,14 +1,10 @@
 package com.codeboy.mvc.model.service;
 
 import com.codeboy.mvc.model.dao.IncorrectNoteDao;
-import com.codeboy.mvc.model.responseDto.ApiResponse;
 import com.codeboy.mvc.model.responseDto.IncorrectNoteResponse;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +37,6 @@ public class IncorrectNoteService {
             throw new IllegalArgumentException("유효하지 않은 문제 ID 입니다.:" );
         }
 
-
         Map<String, Object> params = new HashMap<>();
         params.put("memberId", memberId);
         params.put("problemId", problemId);
@@ -65,13 +60,11 @@ public class IncorrectNoteService {
         if (memberId == null) {
             throw new IllegalArgumentException("유효하지 않은 회원 ID입니다.");
         }
-
         List<IncorrectNoteResponse> list = incorrectNoteDao.selectIncorrectProblems(memberId);
 
         if (list == null || list.isEmpty()) {
             throw new NotFoundException("오답노트를 조회할 수 없습니다.");
         }
-
         return list;
     }
 
@@ -80,7 +73,6 @@ public class IncorrectNoteService {
         if (!exists) {
             throw new IllegalArgumentException("DB에 존재하지 않는 오답노트ID 입니다.: " + incorrectNoteId);
         }
-
         incorrectNoteDao.deleteIncorrectProblem(incorrectNoteId);
     }
 }

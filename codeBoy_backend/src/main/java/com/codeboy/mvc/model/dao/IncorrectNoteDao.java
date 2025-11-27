@@ -18,7 +18,7 @@ public interface IncorrectNoteDao {
     public int deleteIncorrectProblem(Long incorrectNoteId);
 
     //오답노트에 문제 추가
-    public Long insertIncorrectProblem(Map<String, Object> params);
+    public void insertIncorrectProblem(Map<String, Object> params);
 
     //문제 존재 여부 체크
     boolean existsProblemById(Long problemId);
