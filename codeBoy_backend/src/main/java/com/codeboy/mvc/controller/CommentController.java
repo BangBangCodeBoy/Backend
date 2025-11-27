@@ -22,9 +22,10 @@ import com.codeboy.mvc.model.dto.Comment;
 import com.codeboy.mvc.model.service.CommentService;
 
 @RestController
-@RequestMapping("/api/user-problem-sets")
+@RequestMapping("/api/comments")
 public class CommentController {
 	private final CommentService commentService;
+
 
 	@Autowired
 	public CommentController(CommentService commentService) {

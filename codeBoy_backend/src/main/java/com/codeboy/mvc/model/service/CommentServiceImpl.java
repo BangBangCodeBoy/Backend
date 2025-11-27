@@ -22,12 +22,12 @@ public class CommentServiceImpl implements CommentService {
 	
 	// 유저제작 문제 세트Id로 조회
 	@Override
-	public List<Comment> getAllCommentsById(long userProblemSetId) {
+	public List<Comment> getAllCommentsById(Long userProblemSetId) {
 		return commentDao.selectCommentsByuserProblemSetId(userProblemSetId);
 	}
 	
 	@Override
-	public int addComment(long userProblemSetId, Comment comment ) {
+	public int addComment(Long userProblemSetId, Comment comment ) {
 
 		return commentDao.insertComment(userProblemSetId, comment);
 	}
@@ -35,7 +35,7 @@ public class CommentServiceImpl implements CommentService {
 
 
 	@Override
-	public int updateComment(long commentId, Comment comment) {
+	public int updateComment(Long commentId, Comment comment) {
 		return commentDao.updateComment(commentId, comment);
 		
 	}
@@ -43,14 +43,14 @@ public class CommentServiceImpl implements CommentService {
 
 
 	@Override
-	public int deleteComment(long commentId) {
+	public int deleteComment(Long commentId) {
 		return commentDao.deleteComment(commentId);
 		
 	}
 
 	
 	@Override
-    public Long getCommentOwnerId(long commentId){
+    public Long getCommentOwnerId(Long commentId){
         return commentDao.selectCommentOwnerId(commentId);
     }
 	

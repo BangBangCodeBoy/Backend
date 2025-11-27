@@ -12,7 +12,7 @@ public interface ScoreDao {
 	public List<UserScore> selectAllUserScore();
 
 	//한 멤버의 스코어 조회
-	public int selectOneUserScore(int memberId);
+	public int selectOneUserScore(Long memberId);
 
 	//멤버 스코어 업데이트
 	public void updateUserScore(UserScore userScore);

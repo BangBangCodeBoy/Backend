@@ -4,8 +4,31 @@
 
 <mapper namespace="com.codeboy.mvc.model.dao.UserProblemSetDao">
 
-    <!-- 문제 세트안의 문제들 조회   -->
-    <select id="">
-
+    <!-- 모든 문제 세트들 조회   -->
+    <select id="selectUserProblemSets" returnType="UserProblemSet">
+        SELECT *
+        FROM user_problem_set
     </select>
+
+    <!-- 회원 아이디를 통해 자신이 제작한 문제세트들을 마이페이지에서 조회  -->
+    <select id="selectUserProblemSetByMemberId" resultType="UserProblemSet">
+        SELECT *
+        FROM user_problem_set
+        WHERE member_id = #{memberId}
+    </select>
+
+    <!-- 문제 세트 등록  -->
+    <insert id="insertUserProblemSet">
+        INSERT INTO user_problem_set (member_id)
+        VALUES (#{memberId})
+    </insert>
+
+    <!-- 문제세트 삭제 -->
+    <delete id="deleteUserProblemSetById">
+        DELETE FROM user_problem_set
+        WHERE id = #{id}
+    </delete>
+
+
+
 </mapper>
