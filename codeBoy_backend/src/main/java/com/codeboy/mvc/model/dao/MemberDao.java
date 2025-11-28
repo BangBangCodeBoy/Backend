@@ -4,6 +4,10 @@ import com.codeboy.mvc.model.dto.Member;
 import com.codeboy.mvc.model.dto.request.MemberUpdateRequest;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.Optional;
+
 @Mapper
 public interface MemberDao {
     void insertMember(Member member);
@@ -27,5 +31,9 @@ public interface MemberDao {
 
     //멤버가 활성화 상태인지 확인
     boolean isMemberActive(Long memberId);
+
+    //사용자명 존재 여부 확인 (id 값)
+    @Select("SELECT * FROM member WHERE id = #{userName}")
+    Optional<Member> findByUsername(String username);
 
 }

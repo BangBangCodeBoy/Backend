@@ -15,7 +15,7 @@ import lombok.Setter;
 @Schema(description="회원 DTO")
 public class Member {
     private long memberId;
-    private String id;
+    private String ID;
     private String password;
     private String nickname;
     private String email;
