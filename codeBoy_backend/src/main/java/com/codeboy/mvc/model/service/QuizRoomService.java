@@ -27,7 +27,6 @@ public class QuizRoomService{
         validateRoomId(roomId);
 
         List<GetQuizRoomMembersResponse> memberList = quizRoomDao.selectOneQuizRoom(roomId);
-        System.out.println("멤버리스트: " + memberList);
         if (memberList.isEmpty()) {
             throw new IllegalStateException("퀴즈방에 참가자가 없습니다.");
         }

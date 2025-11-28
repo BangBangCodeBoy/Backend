@@ -1,18 +1,97 @@
 package com.codeboy.mvc.model.service;
 
+import com.codeboy.mvc.model.dao.MemberDao;
 import com.codeboy.mvc.model.dto.Member;
 import com.codeboy.mvc.model.dto.request.MemberUpdateRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-public interface MemberService {
-    //회원가입
-	public void signupMember();
+import java.util.NoSuchElementException;
+
+@Service
+public class MemberService {
+    @Autowired
+    MemberDao memberDao;
 
 	//회원 정보 가져오기기
-    public Member readMember(String id, String password);
+    public Member getMemberById(Long memberId) {
+        isMemberExist(memberId);
+
+        Member member = memberDao.selectMemberById(memberId);
+        if (member == null) {
+            throw new NoSuchElementException("Id에 해당하는 회원 정보를 찾을 수 없습니다. memberId:" + memberId);
+        }
+        return member;
+    };
 
 	//회원 탈퇴
-    public void withdrawal(int memberId);
+    public void deactivateMember(Long memberId){
+        isMemberExist(memberId);
 
-    //회원정보 수정-> db에서는 patch(nickname, email, id)
-    public void updateMember(long memberId, MemberUpdateRequest memberUpdateRequest);
-}
+        int updatedRows = memberDao.deactivateMemberById(memberId);
+        if (updatedRows == 0) {
+            throw new IllegalStateException("회원 탈퇴 실패 : memberId: " + memberId);
+        }
+        }
+
+
+    public void updateMember(Long memberId, MemberUpdateRequest memberUpdateRequest){
+        isMemberExist(memberId);
+        //중복된 id, email이 있는지 검증 로직
+        String id = memberUpdateRequest.getId();
+        String nickname = memberUpdateRequest.getNickname();
+        String email = memberUpdateRequest.getEmail();
+        validateMemberUpdate(id, nickname, email);
+
+        int affectedRows = memberDao.updateMemberById(memberId, memberUpdateRequest);
+
+        if (affectedRows == 0) {
+            throw new IllegalStateException("회원 정보 수정에 실패하였습니다. memberId: " + memberId);
+        }
+
+    };
+    public boolean checkIdDuplicate(String id) {
+        if (id == null) {
+            throw new IllegalArgumentException("유효하지 않은 Id 입니다.");
+        }
+        return  memberDao.existsId(id);
+    }
+
+    public boolean checkNicknameDuplicate(String nickname ) {
+        if (nickname == null) {
+            throw new IllegalArgumentException("유효하지 않은 Id 입니다.");
+        }
+        return  memberDao.existsNickname(nickname);
+    }
+
+    public boolean checkEmailDuplicate(String email) {
+        if (email == null) {
+            throw new IllegalArgumentException("유효하지 않은 Id 입니다.");
+        }
+        return  memberDao.existsEmail(email);
+    }
+    public void isMemberExist(Long memberId) {
+        if (memberId == null) {
+            throw  new IllegalArgumentException("유효하지 않은 memberId입니다. memberId: " );
+        }
+
+        boolean isActive = memberDao.isMemberActive(memberId);
+        if (!isActive) {
+            throw new IllegalArgumentException("비활성화된 멤버 id 입니다. memberId: " + memberId);
+        }
+    }
+
+    // 최종 제출 시 전체 검증
+    public void validateMemberUpdate(String id, String nickname, String email) {
+        if (memberDao.existsId(id)) {
+            throw new IllegalArgumentException("중복된 ID입니다.");
+        }
+        if (memberDao.existsNickname(nickname)) {
+            throw new IllegalArgumentException("중복된 닉네임입니다.");
+        }
+        if (memberDao.existsEmail(email)) {
+            throw new IllegalArgumentException("중복된 이메일입니다.");
+        }
+    }
+
+};

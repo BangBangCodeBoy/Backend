@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @Schema(description="유저 정보 수정 DTO")
 public class MemberUpdateRequest {
-    private String nickName;
+    private String nickname;
     private String id;
     private String email;
 }
