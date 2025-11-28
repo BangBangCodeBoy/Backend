@@ -35,7 +35,7 @@
 	<select id="selectOneQuizRoom" resultType="GetQuizRoomMembersResponse"
 		parameterType="long">
 		SELECT
-            qrm.member_id,
+            qrm.member_id AS memberId,
             m.nickname
 		FROM quiz_room_member qrm
         JOIN member m ON qrm.member_id = m.member_id
