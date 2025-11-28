@@ -20,22 +20,12 @@ public class ProblemController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<Problem>>> getProblems(@RequestParam int limit, @RequestParam Category category) {
-        if (limit <= 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>(HttpStatus.BAD_REQUEST, "유효하지 않은 limit 입니다", null
-            ));
-        }
-        if (category == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>(HttpStatus.BAD_REQUEST, "유효하지 않은 category 입니다.",null
-            ));
-        }
-
+        try {
         List<Problem> problems = problemService.getProblems(limit, category);
-
-        //만약 요청 수보다 존재하는 문제 수가 적다면
-        if (limit > problems.size()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>(HttpStatus.BAD_REQUEST, "요청보다 존재하는 문제 수가 적습니다.", null));
-        }
-
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(HttpStatus.OK, "문제가 성공적으로 반환되었습니다.", problems));
+
+        }  catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>(HttpStatus.BAD_REQUEST, e.getMessage(), null));
+        }
     }
 }

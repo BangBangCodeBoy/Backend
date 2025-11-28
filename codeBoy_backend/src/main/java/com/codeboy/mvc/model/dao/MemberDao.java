@@ -6,15 +6,15 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface MemberDao {
-    public void insertMember(Member member);
+    void insertMember(Member member);
 
-    public Member selectMemberById(Long memberId);
+    Member selectMemberById(Long memberId);
 
     //멤버 삭제 -> db에서는 status 변경
-    public int deactivateMemberById(Long memberId);
+    int deactivateMemberById(Long memberId);
 
     //멤버 업데이트 -> db에서는 patch(nickname, email, id)
-    public int updateMemberById(@Param("memberId") Long memberId, @Param("update") MemberUpdateRequest memberUpdateRequest);
+    int updateMemberById(@Param("memberId") Long memberId, @Param("update") MemberUpdateRequest memberUpdateRequest);
 
     //아이디 중복 체크
     boolean existsId(String id);

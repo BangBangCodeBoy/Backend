@@ -46,7 +46,7 @@ public class MemberController {
     }
 
     //회원 탈퇴
-    @DeleteMapping()
+    @DeleteMapping
     public ResponseEntity<ApiResponse<String>> deleteMember() {
         //TODO : memberId 받아오기
         Long memberId = 1L;
@@ -109,6 +109,4 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.failure(HttpStatus.BAD_REQUEST, e.getMessage()));
         }
     }
-
-
 }
