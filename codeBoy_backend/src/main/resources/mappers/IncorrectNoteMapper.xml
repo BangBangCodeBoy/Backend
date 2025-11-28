@@ -4,7 +4,7 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.codeboy.mvc.model.dao.IncorrectNoteDao">
-    <select id="selectIncorrectProblems" resultType="Problem" parameterType="long" >
+    <select id="selectIncorrectProblems" resultType="IncorrectNoteResponse" parameterType="long" >
         (SELECT
             inote.incorrect_note_id,
             p.problem_description,
@@ -20,7 +20,7 @@
             AND inote.is_user_problem = 0
         ) UNION ALL
         (SELECT
-        inote.incorrect_note_id,
+            inote.incorrect_note_id,
             u.problem_description,
             u.choice_1 AS choice1,
             u.choice_2 AS choice2,

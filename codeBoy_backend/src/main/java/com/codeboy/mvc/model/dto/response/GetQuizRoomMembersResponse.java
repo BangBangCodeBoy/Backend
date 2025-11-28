@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-public class getQuizRoomMembersResponse {
+public class GetQuizRoomMembersResponse {
     private Long memberId;
     private String nickname;
 }

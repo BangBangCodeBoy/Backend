@@ -2,7 +2,7 @@ package com.codeboy.mvc.model.service;
 
 import java.util.List;
 
-import com.codeboy.mvc.model.dto.response.getQuizRoomMembersResponse;
+import com.codeboy.mvc.model.dto.response.GetQuizRoomMembersResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.codeboy.mvc.model.dao.QuizRoomDao;
@@ -23,10 +23,10 @@ public class QuizRoomService{
         return quizRooms;
 	}
 
-    public List<getQuizRoomMembersResponse> getOneQuizRoomMember(long roomId) {
+    public List<GetQuizRoomMembersResponse> getOneQuizRoomMember(long roomId) {
         validateRoomId(roomId);
 
-        List<getQuizRoomMembersResponse> memberList = quizRoomDao.selectOneQuizRoom(roomId);
+        List<GetQuizRoomMembersResponse> memberList = quizRoomDao.selectOneQuizRoom(roomId);
 
         if (!memberList.isEmpty()) {
             throw new IllegalStateException("퀴즈방에 참가자가 없습니다.");

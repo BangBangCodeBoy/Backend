@@ -32,7 +32,7 @@
 	</select>
 
 	<!-- 하나의 퀴즈룸 조회 -->
-	<select id="selectOneQuizRoom" resultType="getQuizRoomMemberResponse"
+	<select id="selectOneQuizRoom" resultType="GetQuizRoomMembersResponse"
 		parameterType="long">
 		SELECT
             qrm.member_id,

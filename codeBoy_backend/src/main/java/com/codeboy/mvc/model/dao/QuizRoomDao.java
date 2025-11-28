@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.codeboy.mvc.model.dto.QuizRoom;
 import com.codeboy.mvc.model.dto.QuizRoomMember;
-import com.codeboy.mvc.model.dto.response.getQuizRoomMembersResponse;
+import com.codeboy.mvc.model.dto.response.GetQuizRoomMembersResponse;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
@@ -18,7 +18,7 @@ public interface QuizRoomDao {
 	public List<QuizRoom> selectAllQuizRoom();
 
 	//하나의 퀴즈룸 조회(참가 멤버확인)
-	public List<getQuizRoomMembersResponse> selectOneQuizRoom(Long roomId);
+	public List<GetQuizRoomMembersResponse> selectOneQuizRoom(Long roomId);
 
 	//퀴즈룸 수정
 	//퀴즈룸 삭제
