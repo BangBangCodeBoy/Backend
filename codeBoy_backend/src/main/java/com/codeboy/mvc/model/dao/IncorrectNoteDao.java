@@ -3,7 +3,7 @@ package com.codeboy.mvc.model.dao;
 import java.util.List;
 import java.util.Map;
 
-import com.codeboy.mvc.model.responseDto.IncorrectNoteResponse;
+import com.codeboy.mvc.model.dto.response.IncorrectNoteResponse;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

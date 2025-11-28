@@ -2,7 +2,7 @@ package com.codeboy.mvc.model.service;
 
 import java.util.List;
 
-import com.codeboy.mvc.model.responseDto.getQuizRoomMembersResponse;
+import com.codeboy.mvc.model.dto.response.getQuizRoomMembersResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.codeboy.mvc.model.dao.QuizRoomDao;

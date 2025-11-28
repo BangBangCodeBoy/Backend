@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.codeboy.mvc.model.dto.QuizRoom;
 import com.codeboy.mvc.model.dto.QuizRoomMember;
-import com.codeboy.mvc.model.responseDto.getQuizRoomMembersResponse;
+import com.codeboy.mvc.model.dto.response.getQuizRoomMembersResponse;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

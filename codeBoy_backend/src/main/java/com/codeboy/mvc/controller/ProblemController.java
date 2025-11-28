@@ -1,7 +1,7 @@
 package com.codeboy.mvc.controller;
 
 import com.codeboy.common.Category;
-import com.codeboy.mvc.model.responseDto.ApiResponse;
+import com.codeboy.mvc.model.dto.response.ApiResponse;
 import com.codeboy.mvc.model.dto.Problem;
 import com.codeboy.mvc.model.service.ProblemServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;

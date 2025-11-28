@@ -1,7 +1,7 @@
 package com.codeboy.mvc.model.service;
 
 import com.codeboy.mvc.model.dao.IncorrectNoteDao;
-import com.codeboy.mvc.model.responseDto.IncorrectNoteResponse;
+import com.codeboy.mvc.model.dto.response.IncorrectNoteResponse;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

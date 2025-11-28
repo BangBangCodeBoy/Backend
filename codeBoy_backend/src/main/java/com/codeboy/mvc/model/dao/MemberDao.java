@@ -1,7 +1,7 @@
 package com.codeboy.mvc.model.dao;
 
 import com.codeboy.mvc.model.dto.Member;
-import com.codeboy.mvc.model.requestDto.MemberUpdateRequest;
+import com.codeboy.mvc.model.dto.request.MemberUpdateRequest;
 
 public interface MemberDao {
     public void insertMember(Member member);

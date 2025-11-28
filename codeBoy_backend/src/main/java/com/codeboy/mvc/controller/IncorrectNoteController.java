@@ -1,8 +1,8 @@
 package com.codeboy.mvc.controller;
 
-import com.codeboy.mvc.model.requestDto.IncorrectNoteRequest;
-import com.codeboy.mvc.model.responseDto.ApiResponse;
-import com.codeboy.mvc.model.responseDto.IncorrectNoteResponse;
+import com.codeboy.mvc.model.dto.request.IncorrectNoteRequest;
+import com.codeboy.mvc.model.dto.response.ApiResponse;
+import com.codeboy.mvc.model.dto.response.IncorrectNoteResponse;
 import com.codeboy.mvc.model.service.IncorrectNoteService;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.http.HttpStatus;

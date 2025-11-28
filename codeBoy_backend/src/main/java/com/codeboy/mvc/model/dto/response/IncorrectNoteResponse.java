@@ -1,4 +1,4 @@
-package com.codeboy.mvc.model.responseDto;
+package com.codeboy.mvc.model.dto.response;
 
 import com.codeboy.common.Category;
 import lombok.*;

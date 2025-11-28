@@ -1,9 +1,9 @@
 package com.codeboy.mvc.controller;
 
 import com.codeboy.mvc.model.dto.*;
-import com.codeboy.mvc.model.requestDto.JoinQuizRoomRequest;
-import com.codeboy.mvc.model.responseDto.ApiResponse;
-import com.codeboy.mvc.model.responseDto.getQuizRoomMembersResponse;
+import com.codeboy.mvc.model.dto.request.JoinQuizRoomRequest;
+import com.codeboy.mvc.model.dto.response.ApiResponse;
+import com.codeboy.mvc.model.dto.response.getQuizRoomMembersResponse;
 import com.codeboy.mvc.model.service.QuizRoomService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -85,9 +85,7 @@ public class QuizRoomController {
     public ResponseEntity<ApiResponse<List<getQuizRoomMembersResponse>>> getQuizRoomMembers(@PathVariable long roomId) {
         try {
         List<getQuizRoomMembersResponse> memberList = quizRoomService.getOneQuizRoomMember(roomId);
-
             return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(HttpStatus.OK, "멤버 리스트를 반환합니다.", memberList));
-
         } catch (IllegalStateException | IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.failure(HttpStatus.BAD_REQUEST, e.getMessage()));
         }
