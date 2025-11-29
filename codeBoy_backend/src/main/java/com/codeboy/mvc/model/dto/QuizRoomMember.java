@@ -12,23 +12,23 @@ import lombok.Setter;
 @Setter
 @Schema(description="회원 퀴즈방 중간 DTO")
 public class QuizRoomMember {
-    private long quizRoomMemberId;
-    private long memberId;
-    private long roomId;
+    private Long quizRoomMemberId;
+    private Long memberId;
+    private Long roomId;
     private Boolean isHost;
-	public long getQuizRoomMemberId() {
+	public Long getQuizRoomMemberId() {
 		return quizRoomMemberId;
 	}
 	public void setQuizRoomMemberId(long quizRoomMemberId) {
 		this.quizRoomMemberId = quizRoomMemberId;
 	}
-	public long getMemberId() {
+	public Long getMemberId() {
 		return memberId;
 	}
 	public void setMemberId(long memberId) {
 		this.memberId = memberId;
 	}
-	public long getRoomId() {
+	public Long getRoomId() {
 		return roomId;
 	}
 	public void setRoomId(long roomId) {

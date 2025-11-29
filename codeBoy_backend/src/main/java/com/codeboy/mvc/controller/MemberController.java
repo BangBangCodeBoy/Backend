@@ -1,9 +1,20 @@
 package com.codeboy.mvc.controller;
 
+
 import com.codeboy.mvc.model.requestDto.MemberUpdateRequest;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
+
+import com.codeboy.mvc.model.dto.request.DuplicateCheckRequest;
+import com.codeboy.mvc.model.dto.request.MemberUpdateRequest;
+import com.codeboy.mvc.model.dto.response.ApiResponse;
+import com.codeboy.mvc.model.dto.response.DuplicateCheckResponse;
+import com.codeboy.mvc.model.service.IncorrectNoteService;
+import com.codeboy.mvc.model.service.MemberService;
+import org.apache.coyote.Response;
+import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +23,8 @@ import com.codeboy.mvc.model.requestDto.LoginRequest;
 import com.codeboy.mvc.model.service.MemberService;
 
 import java.net.URI;
+
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api")
@@ -110,48 +123,85 @@ public class MemberController {
         }
 
 
-        int result = memberService.updateMember(memberId, member);
+    //회원 조회
+    @GetMapping
+    //TODO: memberID 넣기
+    public ResponseEntity<ApiResponse<Member>> getMemberInfo() {
+        Long memberId = 1L;
+        try {
+            Member member = memberService.getMemberById(memberId);
+            return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(HttpStatus.OK, "회원정보가 조회되었습니다", member));
 
-        if (result == 1) {
-            return ResponseEntity
-                    .status(HttpStatusCode.valueOf(200))
-                    .body(member); // 또는 "수정 성공" 메시지
-        } else {
-            return ResponseEntity
-                    .status(HttpStatusCode.valueOf(400))
-                    .body("회원정보 수정 실패");
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.failure(HttpStatus.NOT_FOUND, e.getMessage()));
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.failure(HttpStatus.BAD_REQUEST, e.getMessage()));
         }
     }
 
-    /**
-     * 회원 탈퇴 (비활성화)
-     * DELETE /api/members/me
-     * Response:
-     *   204 성공 시 본문 없음
-     *   401 인증 실패
-     */
-    @DeleteMapping("/members/me")
-    public ResponseEntity<?> deleteMe() {
-        // TODO: 실제 구현에서는 JWT/세션에서 memberId를 가져와야 함.
-        long currentMemberId = 1L;
+    //회원 탈퇴
+    @DeleteMapping
+    public ResponseEntity<ApiResponse<String>> deleteMember() {
+        //TODO : memberId 받아오기
+        Long memberId = 1L;
+        try {
+            memberService.deactivateMember(memberId);
+            return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(HttpStatus.OK, "회원이 성공적으로 삭제되었습니다."));
 
-        Member member = memberService.getMemberByMemberId(currentMemberId);
-        if (member == null) {
-            return ResponseEntity
-                    .status(HttpStatusCode.valueOf(401))
-                    .body("인증된 회원을 찾을 수 없습니다.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.failure(HttpStatus.BAD_REQUEST, e.getMessage()));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.failure(HttpStatus.NOT_FOUND, e.getMessage()));
         }
+    }
 
-        int result = memberService.deactivateMember(currentMemberId);
+    //회원 정보 업데이트
+    @PatchMapping
+    public ResponseEntity<ApiResponse<String>> updateMember(@RequestBody MemberUpdateRequest request) {
+        //TODO : memberId 받아오기
+        Long memberId = 1L;
+        try {
+            memberService.updateMember(memberId, request);
+            return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(HttpStatus.OK, "회원정보 업데이트에 성공했습니다."));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.failure(HttpStatus.BAD_REQUEST, e.getMessage()));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.failure(HttpStatus.NOT_FOUND, e.getMessage()));
+        }
+    }
 
-        if (result == 1) {
-            return ResponseEntity
-                    .status(HttpStatusCode.valueOf(204))
-                    .build();
-        } else {
-            return ResponseEntity
-                    .status(HttpStatusCode.valueOf(400))
-                    .body("회원 탈퇴 처리 실패");
+    //ID, 닉네임, 이메일 중복체크
+    @PostMapping("/check-id")
+    public ResponseEntity<ApiResponse<DuplicateCheckResponse>> checkId(@RequestBody DuplicateCheckRequest request) {
+        try {
+            boolean duplicated = memberService.checkIdDuplicate(request.getValue());
+            DuplicateCheckResponse response = new DuplicateCheckResponse(duplicated);
+            return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(HttpStatus.OK, "아이디 중복 확인 완료", response));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.failure(HttpStatus.BAD_REQUEST, e.getMessage()));
+        }
+    }
+
+    @PostMapping("/check-email")
+    public ResponseEntity<ApiResponse<DuplicateCheckResponse>> checkEmail(@RequestBody DuplicateCheckRequest request) {
+        try {
+            boolean duplicated = memberService.checkEmailDuplicate(request.getValue());
+            DuplicateCheckResponse response = new DuplicateCheckResponse(duplicated);
+            return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(HttpStatus.OK, "이메일 중복 확인 완료", response));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.failure(HttpStatus.BAD_REQUEST, e.getMessage()));
+        }
+    }
+
+    @PostMapping("/check-nickname")
+    public ResponseEntity<ApiResponse<DuplicateCheckResponse>> checkNickname(@RequestBody DuplicateCheckRequest request) {
+        try {
+            boolean duplicated = memberService.checkNicknameDuplicate(request.getValue());
+            DuplicateCheckResponse response = new DuplicateCheckResponse(duplicated);
+            return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(HttpStatus.OK, "닉네임 중복 확인 완료", response));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.failure(HttpStatus.BAD_REQUEST, e.getMessage()));
         }
     }
 }

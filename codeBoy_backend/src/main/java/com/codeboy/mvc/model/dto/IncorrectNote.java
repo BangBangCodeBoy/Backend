@@ -15,4 +15,6 @@ public class IncorrectNote {
     private long incorrectNoteId;
     private long memberId;
     private long problemId;
+    private long userProblemId;
+    private Boolean isUserProblem;
 }
