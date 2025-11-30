@@ -1,7 +1,7 @@
 package com.codeboy.mvc.controller;
 
 import com.codeboy.mvc.model.dto.UserProblemSet;
-import com.codeboy.mvc.model.responseDto.ApiResponse; // 실제 패키지에 맞게 수정
+import com.codeboy.mvc.model.dto.response.ApiResponse; // 실제 패키지에 맞게 수정
 import com.codeboy.mvc.model.service.UserProblemSetService;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -39,7 +39,7 @@ public class UserProblemSetController {
     // 마이페이지 - 내가 만든 문제세트 조회
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<UserProblemSet>> getMyUserProblemSet(HttpSession session) {
-        Long memberId = (Long) session.getAttribute("member_id");
+        Long memberId = (Long) session.getAttribute("memberId");
         if (memberId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(ApiResponse.failure(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."));
@@ -65,7 +65,7 @@ public class UserProblemSetController {
     // 마이페이지 - 문제세트 생성
     @PostMapping
     public ResponseEntity<ApiResponse<Void>> createMyUserProblemSet(HttpSession session) {
-        Long memberId = (Long) session.getAttribute("member_id");
+        Long memberId = (Long) session.getAttribute("memberId");
         if (memberId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(ApiResponse.failure(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."));
@@ -80,8 +80,9 @@ public class UserProblemSetController {
             //UserProblemSetMapper에도 generateKey를 추가해서 PK값을 set에 담을 수 있었다.
             UserProblemSet set = new UserProblemSet();
             set.setMemberId(memberId);
-            int result = userProblemSetService.createUserProblemSet(set);
+            System.out.println(set);
 
+            int result = userProblemSetService.createUserProblemSet(set);
             if (result == 0) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(ApiResponse.failure(HttpStatus.BAD_REQUEST, "유저 문제세트 생성에 실패했습니다."));
@@ -105,7 +106,7 @@ public class UserProblemSetController {
             @PathVariable Long userProblemSetId,
             HttpSession session
     ) {
-        Long memberId = (Long) session.getAttribute("member_id");
+        Long memberId = (Long) session.getAttribute("memberId");
         if (memberId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(ApiResponse.failure(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."));

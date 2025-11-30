@@ -12,8 +12,17 @@ public class ApiResponse<T> {
     private HttpStatus status;
     private String message;
     private T data;
-
-    public static <T> ApiResponse<T> success(HttpStatus status, T data) {
+    
+    
+    
+//    public ApiResponse(HttpStatus status, String message, T data) {
+//		super();
+//		this.status = status;
+//		this.message = message;
+//		this.data = data;
+//	}
+//
+	public static <T> ApiResponse<T> success(HttpStatus status, T data) {
         return new ApiResponse<>(status, null, data);
     }
 

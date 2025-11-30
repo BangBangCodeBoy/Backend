@@ -2,22 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
+
 <mapper namespace="com.codeboy.mvc.model.dao.CommentDao">
 
-	<select id="selectAllByUserProblemSetId" resultType="Comment">
+	<select id="selectCommentsByuserProblemSetId" resultType="Comment">
 		SELECT *
 		FROM comment
-		WHERE user_problem_id = #{userProblemSetId}
+		WHERE user_problem_set_id = #{userProblemSetId}
 	</select>
 
 	<insert id="insertComment">
-		INSERT INTO comment (member_id, content, comment_date, user_problem_set)
-		VALUES (#{member_id}, #{content}, #{comment_date, #{user_problem_set})
+		INSERT INTO comment (member_id, content, comment_date, user_problem_set_id)
+		VALUES (#{comment.memberId}, #{comment.content}, NOW(), #{userProblemSetId})
 	</insert>
 
 	<update id="updateComment">
 		UPDATE comment
-		SET content = #{content}
+		SET content = #{comment.content}
 		WHERE comment_id = #{commentId}
 	</update>
 
@@ -26,8 +27,12 @@
 		FROM comment
 		WHERE comment_id = #{commentId}
 	</delete>
+	
+	<select id="selectCommentOwnerId">
+		SELECT member_id
+		FROM comment
+		WHERE comment_id = #{commentId}
+	</select>
+	
 
-    <select id="">
-
-    </select>
 </mapper>

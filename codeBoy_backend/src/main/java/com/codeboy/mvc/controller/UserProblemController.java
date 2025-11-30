@@ -1,7 +1,7 @@
 package com.codeboy.mvc.controller;
 
 import com.codeboy.mvc.model.dto.UserProblem;
-import com.codeboy.mvc.model.responseDto.ApiResponse; // 실제 패키지에 맞게 수정
+import com.codeboy.mvc.model.dto.response.ApiResponse; // 실제 패키지에 맞게 수정
 import com.codeboy.mvc.model.service.UserProblemService;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -52,7 +52,7 @@ public class UserProblemController {
             @RequestBody List<UserProblem> userProblems,
             HttpSession session
     ) {
-        Long memberId = (Long) session.getAttribute("member_id");
+        Long memberId = (Long) session.getAttribute("memberId");
         if (memberId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(ApiResponse.failure(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."));
@@ -90,7 +90,7 @@ public class UserProblemController {
             @RequestBody UserProblem userProblem,
             HttpSession session
     ) {
-        Long memberId = (Long) session.getAttribute("member_id");
+        Long memberId = (Long) session.getAttribute("memberId");
         if (memberId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(ApiResponse.failure(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."));
@@ -124,7 +124,7 @@ public class UserProblemController {
             @PathVariable Long userProblemId,
             HttpSession session
     ) {
-        Long memberId = (Long) session.getAttribute("member_id");
+        Long memberId = (Long) session.getAttribute("memberId");
         if (memberId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(ApiResponse.failure(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."));

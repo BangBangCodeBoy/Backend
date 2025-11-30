@@ -1,29 +1,28 @@
 package com.codeboy.mvc.controller;
 
 
-import com.codeboy.mvc.model.requestDto.MemberUpdateRequest;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
-
+import com.codeboy.mvc.model.dto.Member;
 import com.codeboy.mvc.model.dto.request.DuplicateCheckRequest;
+import com.codeboy.mvc.model.dto.request.LoginRequest;
 import com.codeboy.mvc.model.dto.request.MemberUpdateRequest;
 import com.codeboy.mvc.model.dto.response.ApiResponse;
 import com.codeboy.mvc.model.dto.response.DuplicateCheckResponse;
-import com.codeboy.mvc.model.service.IncorrectNoteService;
-import com.codeboy.mvc.model.service.MemberService;
-import org.apache.coyote.Response;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
+
 import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.codeboy.mvc.model.dto.Member;
-import com.codeboy.mvc.model.requestDto.LoginRequest;
 import com.codeboy.mvc.model.service.MemberService;
 
-import java.net.URI;
 
+import java.net.URI;
+import java.util.HashMap;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -76,10 +75,37 @@ public class MemberController {
      *   401 실패 시 { error: "로그인 실패" }
      */
     @PostMapping("/auth/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-		return null;
-    }
+    public ResponseEntity<ApiResponse<?>> login(@RequestBody LoginRequest request, HttpSession session) {
+        try {
+            // Service를 통해 로그인 처리
+            Member member = memberService.login(request.getId(), request.getPassword());
+            
+            // 세션에 member_id 저장
+            session.setAttribute("memberId", member.getMemberId());
+            session.setAttribute("id", member.getId());
+            session.setAttribute("nickname", member.getNickname());
+            
+            // 성공 응답 반환
+           
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(ApiResponse.success(HttpStatus.OK, "로그인 성공",  
+                    	new HashMap<String, Object>() {private static final long serialVersionUID = 5698154608853982208L;
 
+						{
+                        put("memberId", member.getMemberId());
+                        put("nickname", member.getNickname());
+                        put("id", member.getId());
+                    }}));
+        } catch (IllegalArgumentException e) {
+            // 로그인 실패 (ID/비밀번호 오류 등)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.failure(HttpStatus.UNAUTHORIZED, e.getMessage()));
+        } catch (Exception e) {
+            // 기타 오류
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.failure(HttpStatus.INTERNAL_SERVER_ERROR, "로그인 처리 중 오류가 발생했습니다."));
+        }
+    }
     /**
      * 로그아웃
      * POST /api/auth/logout
@@ -88,10 +114,14 @@ public class MemberController {
      *   204 성공 시 본문 없음
      */
     @PostMapping("/auth/logout")
-    public ResponseEntity<Void> logout() {
-       return null;
+    public ResponseEntity<ApiResponse<Void>> logout(HttpSession session) {
+            // 세션 무효화
+            session.invalidate();
+            
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(ApiResponse.success(HttpStatus.OK, "로그아웃 성공", null));
+    	
     }
-
     /**
      * 내 정보 수정
      * PUT /api/members/me
@@ -106,7 +136,7 @@ public class MemberController {
     public ResponseEntity<?> updateMe(@RequestBody MemberUpdateRequest request, @PathVariable long memberId ) {
         //파라미터로 memberId받아서 해당회원의 정보를 수정
 
-        Member member = memberService.getMemberByMemberId(memberId);
+        Member member = memberService.getMemberById(memberId);
         //회원을 못찾는 경우 ->존재하지 않는 memberId인경우
         if (member == null) {
             return ResponseEntity
@@ -115,18 +145,27 @@ public class MemberController {
         }
 
         //닉네임과 이메일은 바꿀 수 있다고 가정. 필요하면 ID도..?
-        if (request.getNickName() != null) {
-            member.setNickname(request.getNickName());
+        if (request.getNickname() != null) {
+            member.setNickname(request.getNickname());
+            return ResponseEntity
+                    .status(HttpStatusCode.valueOf(401))
+                    .body("닉네임이 없습니다..");
         }
         if (request.getEmail() != null) {
             member.setEmail(request.getEmail());
+            return ResponseEntity
+                    .status(HttpStatusCode.valueOf(401))
+                    .body("이메일이 없습니다");
         }
 
+        return ResponseEntity
+                .status(HttpStatusCode.valueOf(200))
+                .body("회원정보 수정 성공");
+    }
 
     //회원 조회
-    @GetMapping
-    //TODO: memberID 넣기
-    public ResponseEntity<ApiResponse<Member>> getMemberInfo() {
+    @GetMapping("/members/")
+    public ResponseEntity<ApiResponse<Member>> getMemberInfo(HttpSession session) {
         Long memberId = 1L;
         try {
             Member member = memberService.getMemberById(memberId);

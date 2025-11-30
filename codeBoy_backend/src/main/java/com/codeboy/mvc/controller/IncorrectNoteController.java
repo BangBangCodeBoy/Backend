@@ -4,6 +4,9 @@ import com.codeboy.mvc.model.dto.request.IncorrectNoteRequest;
 import com.codeboy.mvc.model.dto.response.ApiResponse;
 import com.codeboy.mvc.model.dto.response.IncorrectNoteResponse;
 import com.codeboy.mvc.model.service.IncorrectNoteService;
+
+import jakarta.servlet.http.HttpSession;
+
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +26,10 @@ public class IncorrectNoteController {
 
     //한 회원의 오답노트를 모두 조회
     @GetMapping
-    public ResponseEntity<ApiResponse<List<IncorrectNoteResponse>>> getIncorrectNote() {
+    public ResponseEntity<ApiResponse<List<IncorrectNoteResponse>>> getIncorrectNote(HttpSession session) {
         try {
             //TODO : 세션 or spring security에서 memberId 가져오기
-            Long memberId = 1L;
+            Long memberId = (Long) session.getAttribute("memberId");
             List<IncorrectNoteResponse> incorrectNoteList = incorrectNoteService.getIncorrectNoteList(memberId);
             return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(HttpStatus.OK, "오답노트가 성공적으로 조회되었습니다", incorrectNoteList));
         } catch (IllegalArgumentException e) {
@@ -38,9 +41,9 @@ public class IncorrectNoteController {
 
     //오답노트에 문제 넣기
     @PostMapping
-    public ResponseEntity<ApiResponse<Long>> addIncorrectNote(@RequestBody IncorrectNoteRequest incorrectNoteRequest) {
+    public ResponseEntity<ApiResponse<Long>> addIncorrectNote(@RequestBody IncorrectNoteRequest incorrectNoteRequest, HttpSession session) {
         //TODO : 세션에서 멤버 id 가져오기
-        Long memberId = 1L;
+        Long memberId = (Long) session.getAttribute("memberId");
         Long problemId = incorrectNoteRequest.getProblemId();
         Long userProblemId = incorrectNoteRequest.getUserProblemId();
         Boolean isUserProblem = incorrectNoteRequest.getIsUserProblem();

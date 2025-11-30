@@ -5,12 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Schema(description = "유저제작문제세트 DTO")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class UserProblemSet {
 	private Long userProblemSetId;
 	private Long memberId;

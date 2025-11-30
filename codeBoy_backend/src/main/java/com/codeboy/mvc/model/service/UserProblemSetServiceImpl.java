@@ -23,7 +23,8 @@ public class UserProblemSetServiceImpl implements UserProblemSetService {
 
     @Override
     public UserProblemSet getUserProblemSetByMemberId(Long memberId) {
-        return userProblemSetDao.selectUserProblemSetByMemberId(memberId);
+    	long memberIdl = memberId;
+        return userProblemSetDao.selectUserProblemSetByMemberId(memberIdl);
     }
 
     @Override
@@ -31,7 +32,8 @@ public class UserProblemSetServiceImpl implements UserProblemSetService {
         if (set.getMemberId() == null) {
             throw new IllegalArgumentException("회원 ID가 필요합니다.");
         }
-        return userProblemSetDao.insertUserProblemSet(set.getMemberId());
+        long memberId = set.getMemberId();
+        return userProblemSetDao.insertUserProblemSet(memberId);
     }
 
     @Override

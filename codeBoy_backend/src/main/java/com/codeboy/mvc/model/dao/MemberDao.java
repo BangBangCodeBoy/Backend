@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface MemberDao {
-    void insertMember(Member member);
+    int insertMember(Member member);
 
     Member selectMemberById(Long memberId);
 
@@ -17,18 +17,22 @@ public interface MemberDao {
     int updateMemberById(@Param("memberId") Long memberId, @Param("update") MemberUpdateRequest memberUpdateRequest);
 
     //아이디 중복 체크
-    boolean existsId(String id);
+    Boolean existsId(String id);
 
     //닉네임 중복 체크
-    boolean existsNickname(String nickname);
+    Boolean existsNickname(String nickname);
 
     //이메일 중복 체크
-    boolean existsEmail(String email);
+    Boolean existsEmail(String email);
 
     //멤버가 활성화 상태인지 확인
-    boolean isMemberActive(Long memberId);
+    Boolean isMemberActive(Long memberId);
 
     // 회원 비활성화(탈퇴) - status, isDeleted 업데이트
     int deleteMember(long memberId);
+    
+    // 로그인 - ID와 password로 회원 조회
+    Member selectMemberByIdAndPassword(@Param("id") String id, @Param("password") String password);
+    
     
 }

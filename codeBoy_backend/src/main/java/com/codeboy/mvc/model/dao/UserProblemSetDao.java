@@ -12,7 +12,7 @@ public interface UserProblemSetDao {
     
 
     //마이페이지에서 자신이 제작한 문제세트 조회
-    UserProblemSet selectUserProblemSetByMemberId(Long memberId);
+    UserProblemSet selectUserProblemSetByMemberId(long memberId);
 
     //문제 세트 등록 memberId = 문제 제작자만 넘겨주고 문제들은 problemDao에서 insertUserProblem으로 넣음 (마이페이지에서 생성)
     int insertUserProblemSet(Long memberId);

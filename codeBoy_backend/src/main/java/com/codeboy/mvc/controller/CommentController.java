@@ -3,8 +3,8 @@ package com.codeboy.mvc.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.codeboy.mvc.model.requestDto.CommentUpdateRequest;
-import com.codeboy.mvc.model.responseDto.ApiResponse;
+import com.codeboy.mvc.model.dto.request.CommentUpdateRequest;
+import com.codeboy.mvc.model.dto.response.ApiResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -50,12 +50,18 @@ public class CommentController {
 
     @PostMapping("{userProblemSetId}")
     public ResponseEntity<ApiResponse<Void>> addComment(@PathVariable long userProblemSetId,
-                                                        @RequestBody Comment comment) {
+                                                        @RequestBody Comment comment, HttpSession session) {
         if (comment.getContent() == null || comment.getContent().isBlank()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ApiResponse.failure(HttpStatus.BAD_REQUEST, "댓글 내용은 비어 있을 수 없습니다."));
         }
-
+        Long memberId =  (Long) session.getAttribute("memberId");
+        if (memberId == null) {
+            // 인증 안 됨
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.failure(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."));
+        }
+        comment.setMemberId(memberId);
         int result = commentService.addComment(userProblemSetId, comment);
 
         if (result == 0) {
@@ -76,7 +82,7 @@ public class CommentController {
             @RequestBody CommentUpdateRequest commentUpdateRequest,
             HttpSession session) {
 
-        Long memberId = (Long) session.getAttribute("member_id");
+        Long memberId = (Long) session.getAttribute("memberId");
         if (memberId == null) {
             // 인증 안 됨
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -117,7 +123,7 @@ public class CommentController {
                                                            @PathVariable long commentId,
                                                            HttpSession session) {
 
-        Long memberId = (Long) session.getAttribute("member_id");
+        Long memberId = (Long) session.getAttribute("memberId");
 
         // 로그인 안한 상태
         if (memberId == null) {
