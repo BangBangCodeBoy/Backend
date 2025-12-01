@@ -145,17 +145,11 @@ public class MemberController {
         }
 
         //닉네임과 이메일은 바꿀 수 있다고 가정. 필요하면 ID도..?
-        if (request.getNickname() != null) {
-            member.setNickname(request.getNickname());
+        //닉네임, 아이디, 이메일
+        if (request == null) {
             return ResponseEntity
                     .status(HttpStatusCode.valueOf(401))
-                    .body("닉네임이 없습니다..");
-        }
-        if (request.getEmail() != null) {
-            member.setEmail(request.getEmail());
-            return ResponseEntity
-                    .status(HttpStatusCode.valueOf(401))
-                    .body("이메일이 없습니다");
+                    .body("요청값이 null 입니다.");
         }
 
         return ResponseEntity

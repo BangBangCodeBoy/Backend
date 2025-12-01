@@ -54,7 +54,7 @@ public class MemberServiceImpl implements MemberService {
         if (id == null) {
             throw new IllegalArgumentException("유효하지 않은 Id 입니다.");
         }
-        return  memberDao.existsId(id);
+        return memberDao.existsId(id);
     }
 
     public boolean checkNicknameDuplicate(String nickname ) {
@@ -89,13 +89,13 @@ public class MemberServiceImpl implements MemberService {
 
     // 최종 제출 시 전체 검증
     public void validateMemberUpdate(String id, String nickname, String email) {
-        if (memberDao.existsId(id)) {
+        if (id != null && memberDao.existsId(id)) {
             throw new IllegalArgumentException("중복된 ID입니다.");
         }
-        if (memberDao.existsNickname(nickname)) {
+        if (nickname != null && memberDao.existsNickname(nickname)) {
             throw new IllegalArgumentException("중복된 닉네임입니다.");
         }
-        if (memberDao.existsEmail(email)) {
+        if (email != null && memberDao.existsEmail(email)) {
             throw new IllegalArgumentException("중복된 이메일입니다.");
         }
     }

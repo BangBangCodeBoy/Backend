@@ -42,7 +42,7 @@ public class QuizRoomController {
             quizRoomService.joinQuizRoom(quizRoomMember);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(HttpStatus.CREATED, "퀴즈방이 성공적으로 생성되었습니다.", quizRoomId));
 
-        } catch (IllegalStateException e) {
+        } catch (IllegalStateException | IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.failure(HttpStatus.BAD_REQUEST, e.getMessage()));
         }
     }
