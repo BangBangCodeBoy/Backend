@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.codeboy.mvc.model.dto.request.CommentUpdateRequest;
 import com.codeboy.mvc.model.dto.response.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import com.codeboy.mvc.model.service.CommentService;
 
 @RestController
 @RequestMapping("/api/comments")
+@Tag(name="Comment RESTful API", description = "Comment CRUD를 할 수 있는 REST API")
 public class CommentController {
 	private final CommentService commentService;
 

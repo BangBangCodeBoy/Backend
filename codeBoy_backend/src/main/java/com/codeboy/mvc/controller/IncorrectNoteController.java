@@ -5,6 +5,7 @@ import com.codeboy.mvc.model.dto.response.ApiResponse;
 import com.codeboy.mvc.model.dto.response.IncorrectNoteResponse;
 import com.codeboy.mvc.model.service.IncorrectNoteService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
 
 import org.apache.ibatis.javassist.NotFoundException;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/incorrect-note")
+@Tag(name="Incorrect-note RESTful API", description = "Incorrect-note CRUD를 할 수 있는 REST API")
 public class IncorrectNoteController {
 
     private final IncorrectNoteService incorrectNoteService;

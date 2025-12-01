@@ -3,6 +3,7 @@ package com.codeboy.mvc.controller;
 import com.codeboy.mvc.model.dto.UserProblem;
 import com.codeboy.mvc.model.dto.response.ApiResponse; // 실제 패키지에 맞게 수정
 import com.codeboy.mvc.model.service.UserProblemService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/user-problems")
+@Tag(name="User-problems RESTful API", description = "User-problems CRUD를 할 수 있는 REST API")
 public class UserProblemController {
 
 

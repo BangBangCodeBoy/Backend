@@ -5,6 +5,7 @@ import com.codeboy.mvc.model.dto.request.JoinQuizRoomRequest;
 import com.codeboy.mvc.model.dto.response.ApiResponse;
 import com.codeboy.mvc.model.dto.response.GetQuizRoomMembersResponse;
 import com.codeboy.mvc.model.service.QuizRoomService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/quiz-room")
+@Tag(name="Quiz-room RESTful API", description = "Quiz-room CRUD를 할 수 있는 REST API")
 public class QuizRoomController {
     private final QuizRoomService quizRoomService;
 
