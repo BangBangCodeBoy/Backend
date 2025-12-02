@@ -15,6 +15,4 @@ import lombok.Setter;
 public class UserScore {
 	private long memberId;
 	private int score;
-
-
 }
