@@ -54,6 +54,7 @@ public class MemberController {
         if (result == 1) {
             // Location 헤더에 새로 생성된 리소스 URI 넣어줄 수도 있음
             URI location = URI.create("/api/members/" + member.getMemberId());
+            
             return ResponseEntity
                     .status(HttpStatusCode.valueOf(201))
                     .location(location)

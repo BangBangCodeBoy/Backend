@@ -9,6 +9,6 @@ import java.util.List;
 @Service
 public interface ProblemService {
 
-    public List<Problem> getProblems(int limit, Category category);
+    public List<Problem> getProblems(Category category);
 
 }

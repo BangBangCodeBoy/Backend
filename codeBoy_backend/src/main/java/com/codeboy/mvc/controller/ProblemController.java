@@ -20,9 +20,10 @@ public class ProblemController {
     private ProblemServiceImpl problemService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<Problem>>> getProblems(@RequestParam int limit, @RequestParam Category category) {
+//    @RequestParam int limit,
+    public ResponseEntity<ApiResponse<List<Problem>>> getProblems( @RequestParam Category category) {
         try {
-        List<Problem> problems = problemService.getProblems(limit, category);
+        List<Problem> problems = problemService.getProblems(category);
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(HttpStatus.OK, "문제가 성공적으로 반환되었습니다.", problems));
 
         }  catch (IllegalArgumentException e) {

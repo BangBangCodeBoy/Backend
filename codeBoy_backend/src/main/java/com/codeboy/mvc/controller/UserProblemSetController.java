@@ -40,6 +40,7 @@ public class UserProblemSetController {
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<UserProblemSet>> getMyUserProblemSet(HttpSession session) {
         Long memberId = (Long) session.getAttribute("memberId");
+        System.out.println(memberId);
         if (memberId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(ApiResponse.failure(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."));
@@ -64,7 +65,7 @@ public class UserProblemSetController {
 
     // 마이페이지 - 문제세트 생성
     @PostMapping
-    public ResponseEntity<ApiResponse<Void>> createMyUserProblemSet(HttpSession session) {
+    public ResponseEntity<ApiResponse<?>> createMyUserProblemSet(HttpSession session) {
         Long memberId = (Long) session.getAttribute("memberId");
         if (memberId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -89,7 +90,7 @@ public class UserProblemSetController {
             }
 
             return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(ApiResponse.success(HttpStatus.CREATED, "유저 문제세트 생성 성공", null));
+                    .body(ApiResponse.success(HttpStatus.CREATED, "유저 문제세트 생성 성공", set));
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)

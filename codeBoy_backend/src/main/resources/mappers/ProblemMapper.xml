@@ -9,7 +9,6 @@
         FROM problem
         WHERE category = #{category}
         ORDER BY RAND()
-        LIMIT #{limit};
     </select>
 
 </mapper>
