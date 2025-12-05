@@ -38,7 +38,7 @@ public class UserProblemSetController {
 
     // 마이페이지 - 내가 만든 문제세트 조회
     @GetMapping("/me")
-    public ResponseEntity<ApiResponse<UserProblemSet>> getMyUserProblemSet(HttpSession session) {
+    public ResponseEntity<ApiResponse<List<UserProblemSet>>> getMyUserProblemSet(HttpSession session) {
         Long memberId = (Long) session.getAttribute("memberId");
         System.out.println(memberId);
         if (memberId == null) {
@@ -47,7 +47,7 @@ public class UserProblemSetController {
         }
 
         try {
-            UserProblemSet set = userProblemSetService.getUserProblemSetByMemberId(memberId);
+            List<UserProblemSet> set = userProblemSetService.getUserProblemSetByMemberId(memberId);
 
             if (set == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -82,8 +82,10 @@ public class UserProblemSetController {
             UserProblemSet set = new UserProblemSet();
             set.setMemberId(memberId);
             System.out.println(set);
-
+            
             int result = userProblemSetService.createUserProblemSet(set);
+            System.out.println(set);
+
             if (result == 0) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(ApiResponse.failure(HttpStatus.BAD_REQUEST, "유저 문제세트 생성에 실패했습니다."));

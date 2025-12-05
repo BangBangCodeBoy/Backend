@@ -15,7 +15,7 @@
     </select>
 
     <select id="selectOneUserScore" resultType="UserScore">
-        SELECT member_id, score
+        SELECT *
         FROM user_score
         WHERE member_id = #{memberId}
     </select>

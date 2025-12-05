@@ -18,7 +18,10 @@
     </select>
 
     <!-- 문제 세트 등록  -->
-    <insert id="insertUserProblemSet">
+    <insert id="insertUserProblemSet"
+    	useGeneratedKeys="true"
+        keyProperty="userProblemSetId"
+    	>
         INSERT INTO user_problem_set (member_id)
         VALUES (#{memberId})
     </insert>
