@@ -14,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserProblem {
-	private long userProblemId;
+	private Long userProblemId;
 	private String problemDescription;
 	private Category category;
 	private String choice1;
@@ -23,5 +23,5 @@ public class UserProblem {
 	private String choice4;
 	private String answer;
 	private int commentCount;
-	private long userProblemSetId;
+	private Long userProblemSetId;
 }
