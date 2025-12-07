@@ -2,6 +2,7 @@ package com.codeboy.mvc.config;
 
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.vectorstore.SimpleVectorStore;
+import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,7 +12,7 @@ import java.io.File;
 public class VectorStoreConfig {
 
     @Bean
-    SimpleVectorStore vectorStore(EmbeddingModel embeddingModel) {
+    VectorStore vectorStore(EmbeddingModel embeddingModel) {
         SimpleVectorStore store = SimpleVectorStore.builder(embeddingModel).build();
 
         File file = new File("vectorstore.json");
