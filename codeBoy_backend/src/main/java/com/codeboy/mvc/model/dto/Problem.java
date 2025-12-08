@@ -20,7 +20,7 @@ public class Problem {
     private String choice2;
     private String choice3;
     private String choice4;
-    private String answer;
+    private int answerChoice;
     private Category category;
 
 }
