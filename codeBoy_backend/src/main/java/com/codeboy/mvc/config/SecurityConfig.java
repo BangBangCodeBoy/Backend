@@ -1,5 +1,7 @@
 package com.codeboy.mvc.config;
 
+import com.codeboy.mvc.jwt.JWTFilter;
+import com.codeboy.mvc.jwt.JWTUtil;
 import com.codeboy.mvc.jwt.LoginFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,8 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final ObjectMapper objectMapper; // 필요 없으면 지워도 됨
+    private final JWTUtil jwtUtil;
+
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {

@@ -57,8 +57,8 @@
     </select>
 
     <insert id="insertMember" parameterType="Member">
-        INSERT INTO member (ID, password, nickname, email, is_active, signup_date)
-        VALUES (#{id}, #{password}, #{nickname}, #{email}, 1, NOW());
+        INSERT INTO member (ID, password, nickname, email, is_active, signup_date, role)
+        VALUES (#{id}, #{password}, #{nickname}, #{email}, 1, NOW(), #{role});
     </insert>
     
        <!-- 로그인 - ID와 password로 회원 조회 -->
@@ -88,6 +88,9 @@
         FROM member
         WHERE id = #{id}
         LIMIT 1
+    </select>
+    <select id="currentDatabase" resultType="string">
+        SELECT DATABASE();
     </select>
 
 </mapper>

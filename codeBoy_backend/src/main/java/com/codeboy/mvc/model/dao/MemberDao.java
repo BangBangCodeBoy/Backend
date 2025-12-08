@@ -38,6 +38,6 @@ public interface MemberDao {
     boolean existByUserId(String id);
 
     Member findByUserId(String id);
-    
-    
+
+    String currentDatabase();  // 🔥 추가
 }
