@@ -8,12 +8,16 @@ import org.springframework.web.bind.annotation.*;
 
 import com.codeboy.mvc.model.dto.UserScore;
 import com.codeboy.mvc.model.service.UserScoreService;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import com.codeboy.mvc.model.dto.response.ApiResponse;
 
 import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("api/scores")
+@Tag(name="User-score RESTful API", description = "User-score를 CRUD를 할 수 있게하는 api")
 public class UserScoreController {
 
     private final UserScoreService userScoreService;

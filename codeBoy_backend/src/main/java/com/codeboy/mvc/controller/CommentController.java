@@ -21,8 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codeboy.mvc.model.dto.Comment;
 import com.codeboy.mvc.model.service.CommentService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/comments")
+@Tag(name="Comment RESTful API", description = "Comment CRUD를 할 수 있는 REST API")
 public class CommentController {
 	private final CommentService commentService;
 
