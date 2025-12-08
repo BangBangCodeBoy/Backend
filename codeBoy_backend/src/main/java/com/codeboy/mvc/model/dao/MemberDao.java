@@ -33,6 +33,11 @@ public interface MemberDao {
     
     // 로그인 - ID와 password로 회원 조회
     Member selectMemberByIdAndPassword(@Param("id") String id, @Param("password") String password);
+
+    //spring security
+    boolean existByUserId(String id);
+
+    Member findByUserId(String id);
     
     
 }
