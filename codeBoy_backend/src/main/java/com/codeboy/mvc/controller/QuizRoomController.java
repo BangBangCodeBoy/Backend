@@ -104,4 +104,21 @@ public class QuizRoomController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.failure(HttpStatus.BAD_REQUEST, e.getMessage()));
         }
     }
+    //퀴즈방에서 나가기
+    // 퀴즈방에서 나가기
+    @DeleteMapping("/{roomId}/member/{memberId}")
+    public ResponseEntity<ApiResponse<String>> leaveQuizRoom(@PathVariable long roomId,
+                                                             @PathVariable long memberId) {
+        try {
+            quizRoomService.leaveQuizRoom(roomId, memberId);
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(ApiResponse.success(HttpStatus.OK, "퀴즈방에서 성공적으로 나갔습니다."));
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.failure(HttpStatus.BAD_REQUEST, e.getMessage()));
+        }
+    }
+
 }

@@ -6,6 +6,7 @@ import com.codeboy.mvc.model.dto.QuizRoom;
 import com.codeboy.mvc.model.dto.QuizRoomMember;
 import com.codeboy.mvc.model.dto.response.GetQuizRoomMembersResponse;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface QuizRoomDao {
@@ -32,4 +33,13 @@ public interface QuizRoomDao {
 
     //퀴즈룸에 특정 멤버가 있는지 확인
     public int isDuplicatedMember(Long memberId);
+
+    QuizRoomMember selectQuizRoomMember(@Param("roomId") long roomId,
+                                        @Param("memberId") long memberId);
+
+    /**
+     * 퀴즈방 멤버 테이블에서 특정 멤버를 삭제 (퇴장)
+     */
+    int deleteQuizRoomMember(@Param("roomId") long roomId,
+                             @Param("memberId") long memberId);
 }

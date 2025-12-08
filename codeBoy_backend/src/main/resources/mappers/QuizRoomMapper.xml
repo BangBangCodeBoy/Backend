@@ -62,5 +62,27 @@
         WHERE member_id = #{memberId}
     </select>
 
+    <!-- 특정 방 + 특정 멤버 1명 조회 -->
+    <select id="selectQuizRoomMember"
+            parameterType="map"
+            resultType="com.codeboy.mvc.model.dto.QuizRoomMember">
+        SELECT
+        room_id  AS roomId,
+        member_id AS memberId,
+        is_host  AS isHost
+        FROM quiz_room_member
+        WHERE room_id = #{roomId}
+        AND member_id = #{memberId}
+        LIMIT 1
+    </select>
+
+    <!-- 특정 방에서 특정 멤버 삭제 (퇴장) -->
+    <delete id="deleteQuizRoomMember" parameterType="map">
+        DELETE FROM quiz_room_member
+        WHERE room_id = #{roomId}
+        AND member_id = #{memberId}
+    </delete>
+
+
 
 </mapper>
