@@ -56,7 +56,7 @@
         WHERE member_id = #{memberId}
     </select>
 
-    <insert id="insertMember" parameterType="Member">
+    <insert id="insertMember" parameterType="Member" useGeneratedKeys="true" keyProperty="memberId" keyColumn="member_id">
         INSERT INTO member (ID, password, nickname, email, is_active, signup_date, role)
         VALUES (#{id}, #{password}, #{nickname}, #{email}, 1, NOW(), #{role});
     </insert>

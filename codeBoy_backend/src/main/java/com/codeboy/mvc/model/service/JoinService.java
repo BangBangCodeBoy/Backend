@@ -15,19 +15,14 @@ public class JoinService {
     private final MemberDao memberDao;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public void joinProcess(JoinRequest req) {
-        // 1) 요청 값 로그 찍기
-        System.out.println("JOIN REQ = id=" + req.getId()
-                + ", nickname=" + req.getNickname()
-                + ", email=" + req.getEmail());
+    public Long joinProcess(JoinRequest req) {
+
 
         // 2) 중복 아이디 체크
         Boolean exists = memberDao.existByUserId(req.getId());
-        System.out.println("existByUserId = " + exists);
 
         if (Boolean.TRUE.equals(exists)) {
-            System.out.println("이미 존재하는 아이디라서 insert 안 함");
-            return;
+            throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
         }
 
         // 3) Member 매핑
@@ -39,17 +34,13 @@ public class JoinService {
         member.setIsActive(true);
         member.setRole("USER");
 
-        // 4) insert 실행
+        // 3) DB Insert
         int rows = memberDao.insertMember(member);
-        System.out.println("insertMember rows = " + rows);
+        if (rows != 1) {
+            // 혹시 모를 예외 상황 방어
+            throw new IllegalStateException("회원 가입에 실패했습니다. (insert rows = " + rows + ")");
+        }
 
-
-        // 🔥 방금 넣은 회원 다시 조회
-        Member saved = memberDao.findByUserId(member.getId());
-        System.out.println("after insert findByUserId = " + saved);
-
-        String dbName = memberDao.currentDatabase();
-        System.out.println("==> APP is connected to DB: " + dbName);
-
+        return member.getMemberId();
     }
 }
