@@ -1,5 +1,7 @@
 package com.codeboy.mvc.jwt;
 
+import com.codeboy.mvc.model.dto.CustomUserDetails;
+import com.codeboy.mvc.model.dto.request.LoginRequest;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,6 +19,13 @@ import java.io.IOException;
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
+    private final JWTUtil jwtUtil;
+    private final com.fasterxml.jackson.databind.ObjectMapper objectMapper; // ✅ 추가
+
+    {
+        // 인스턴스 초기화 블록 or 생성자에서 설정
+        setFilterProcessesUrl("/login");  // ✅ 이 URL로 오는 요청을 로그인으로 처리
+    }
 
     /**
      * 로그인 시도 시 호출되는 메서드
@@ -25,10 +34,19 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response)
             throws AuthenticationException {
+        // ✅ JSON 바디를 LoginRequest로 파싱
+        LoginRequest loginRequest =
+                null;
+        try {
+            loginRequest = objectMapper.readValue(request.getInputStream(), LoginRequest.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
 
         // 기본적으로 UsernamePasswordAuthenticationFilter가 제공하는 메서드 사용
-        String username = obtainUsername(request);
-        String password = obtainPassword(request);
+        String username = loginRequest.getId();
+        String password = loginRequest.getPassword();
 
         // null일 수도 있으니 한 번 더 방어적으로 처리해도 됨
         if (username == null) {
@@ -59,13 +77,25 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         System.out.println("login success: " + authResult.getName());
 
-        // JWT 쓰고 싶으면 여기에서 토큰 만들어서 헤더에 담아주면 됨
-        // response.addHeader("Authorization", "Bearer " + token);
+        // 1) 인증된 사용자 정보 가져오기
+        CustomUserDetails principal = (CustomUserDetails) authResult.getPrincipal();
+        String username = principal.getUsername();
+        String role = principal.getAuthorities().iterator().next().getAuthority(); // 예: "ROLE_USER"
 
-        // 기본 흐름 계속 진행
-        // (필요에 따라 chain.doFilter 호출 여부 선택)
-        chain.doFilter(request, response);
+        // 2) JWT 토큰 생성 (jwtUtil 메서드 형태에 맞게 수정)
+        // 예시: createJwt(아이디, 역할, 만료시간ms)
+        String token = jwtUtil.createJwt(username, role, 60 * 60 * 1000L); // 1시간짜리 토큰
+
+        // 3) 응답 헤더/바디에 토큰 담기
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write("{\"token\":\"" + token + "\"}");
+        response.getWriter().flush();
+
+        // 4) 🔥 더 이상 체인을 안 태운다. 여기서 응답 끝!
+        // chain.doFilter(request, response);  <-- 이건 제거
     }
+
 
     /**
      * 로그인 실패 시 호출되는 메서드
@@ -78,5 +108,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         System.out.println("login fail: " + failed.getMessage());
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write("{\"message\":\"로그인에 실패했습니다.\"}");
     }
+
 }

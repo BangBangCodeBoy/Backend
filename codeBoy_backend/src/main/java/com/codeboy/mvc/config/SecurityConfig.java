@@ -3,6 +3,7 @@ package com.codeboy.mvc.config;
 import com.codeboy.mvc.jwt.JWTFilter;
 import com.codeboy.mvc.jwt.JWTUtil;
 import com.codeboy.mvc.jwt.LoginFilter;
+import com.codeboy.mvc.model.service.CustomerUserDetailService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -17,14 +18,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@Configuration
-@EnableWebSecurity
 @RequiredArgsConstructor
+@EnableWebSecurity
+@Configuration
 public class SecurityConfig {
 
-    private final AuthenticationConfiguration authenticationConfiguration;
-    private final ObjectMapper objectMapper; // 필요 없으면 지워도 됨
+    private final CustomerUserDetailService customerUserDetailService;
     private final JWTUtil jwtUtil;
+    private final com.fasterxml.jackson.databind.ObjectMapper objectMapper; // ✅ 추가
 
 
     @Bean
@@ -32,45 +33,51 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // 특정 Http 요청에 대한 웹 기반 보안 구성
+    // ✅ AuthenticationManager를 “내 UserDetailsService + BCrypt”로 명시적으로 구성
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        var builder = http.getSharedObject(org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder.class);
 
-        // 기본 제공 로그인/HTTP Basic/CSRF 비활성화
+        builder
+                .userDetailsService(customerUserDetailService)
+                .passwordEncoder(bCryptPasswordEncoder());
+
+        return builder.build();
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   AuthenticationManager authenticationManager) throws Exception {
+
         http
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable);
 
-        // 인가(접근 권한) 설정
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/login", "/join").permitAll()
-                        .requestMatchers("/admin").hasRole("ADMIN") // "ADMIB" 오타 수정
+                        .requestMatchers("/admin/**").hasRole("ADMIN") // ✅ 보통 이렇게 씀
                         .anyRequest().authenticated()
                 );
 
-        // 세션 사용하지 않는(JWT 등) 방식으로 설정
         http
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 );
 
-        // 커스텀 로그인 필터 추가 (UsernamePasswordAuthenticationFilter 위치에 대체)
-        AuthenticationManager authenticationManager =
-                authenticationConfiguration.getAuthenticationManager();
-
+        // ✅ 로그인 필터에 jwtUtil도 같이 넘겨주는 게 일반적
         http.addFilterAt(
-                new LoginFilter(authenticationManager),
+                new LoginFilter(authenticationManager, jwtUtil, objectMapper), // ✅ 수정
+                UsernamePasswordAuthenticationFilter.class
+        );
+
+        // ✅ JWTFilter도 필터 체인에 등록해야, 로그인 이후부터 토큰으로 인증됨
+        http.addFilterBefore(
+                new JWTFilter(jwtUtil, customerUserDetailService),
                 UsernamePasswordAuthenticationFilter.class
         );
 
         return http.build();
-    }
-
-    // AuthenticationManager를 Bean으로도 노출하고 싶으면 (선택사항)
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager();
     }
 }
