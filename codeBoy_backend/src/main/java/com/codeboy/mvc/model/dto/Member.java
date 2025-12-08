@@ -24,8 +24,8 @@ public class Member {
     private Timestamp signupDate;
     private Boolean isActive;
     private Timestamp deletedDate;
-	
-	
-    
+	private String role;
+
+
 
 }
