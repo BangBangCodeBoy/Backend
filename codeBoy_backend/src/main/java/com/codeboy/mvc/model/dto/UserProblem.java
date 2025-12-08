@@ -21,7 +21,7 @@ public class UserProblem {
 	private String choice2;
 	private String choice3;
 	private String choice4;
-	private String answer;
+	private int answer;
 	private int commentCount;
 	private Long userProblemSetId;
 }
