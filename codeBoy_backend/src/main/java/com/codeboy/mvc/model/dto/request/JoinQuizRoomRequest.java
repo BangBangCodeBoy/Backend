@@ -8,7 +8,6 @@ import lombok.*;
 @Setter
 @ToString
 public class JoinQuizRoomRequest {
-    private long memberId;
     private long roomId;
 
 }

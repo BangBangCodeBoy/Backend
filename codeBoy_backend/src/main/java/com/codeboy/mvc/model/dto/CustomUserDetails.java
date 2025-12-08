@@ -26,6 +26,11 @@ public class CustomUserDetails implements UserDetails {
         });
         return collection;
     }
+
+    public Long getMemberId() {
+        return member.getMemberId(); // member 엔티티에 memberId 필드 있다고 가정
+    }
+
     @Override
     public String getPassword() {
         return member.getPassword();

@@ -3,12 +3,14 @@ package com.codeboy.mvc.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.codeboy.mvc.model.dto.CustomUserDetails;
 import com.codeboy.mvc.model.dto.request.CommentUpdateRequest;
 import com.codeboy.mvc.model.dto.response.ApiResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -53,12 +55,13 @@ public class CommentController {
 
     @PostMapping("{userProblemSetId}")
     public ResponseEntity<ApiResponse<Void>> addComment(@PathVariable long userProblemSetId,
-                                                        @RequestBody Comment comment, HttpSession session) {
+                                                        @RequestBody Comment comment,  @AuthenticationPrincipal CustomUserDetails loginUser) {
         if (comment.getContent() == null || comment.getContent().isBlank()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ApiResponse.failure(HttpStatus.BAD_REQUEST, "댓글 내용은 비어 있을 수 없습니다."));
         }
-        Long memberId =  (Long) session.getAttribute("memberId");
+
+        Long memberId =   loginUser.getMemberId();
         if (memberId == null) {
             // 인증 안 됨
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -83,9 +86,9 @@ public class CommentController {
             @PathVariable long userProblemSetId,
             @PathVariable long commentId,
             @RequestBody CommentUpdateRequest commentUpdateRequest,
-            HttpSession session) {
+            @AuthenticationPrincipal CustomUserDetails loginUser) {
 
-        Long memberId = (Long) session.getAttribute("memberId");
+        Long memberId =    loginUser.getMemberId();
         if (memberId == null) {
             // 인증 안 됨
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -124,9 +127,9 @@ public class CommentController {
     @DeleteMapping("{userProblemSetId}/{commentId}")
     public ResponseEntity<ApiResponse<Void>> deleteComment(@PathVariable long userProblemSetId,
                                                            @PathVariable long commentId,
-                                                           HttpSession session) {
+                                                           @AuthenticationPrincipal CustomUserDetails loginUser) {
 
-        Long memberId = (Long) session.getAttribute("memberId");
+        Long memberId =     loginUser.getMemberId();
 
         // 로그인 안한 상태
         if (memberId == null) {

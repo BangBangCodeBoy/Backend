@@ -1,6 +1,7 @@
 package com.codeboy.mvc.controller;
 
 
+import com.codeboy.mvc.model.dto.CustomUserDetails;
 import com.codeboy.mvc.model.dto.Member;
 import com.codeboy.mvc.model.dto.request.DuplicateCheckRequest;
 import com.codeboy.mvc.model.dto.request.LoginRequest;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import com.codeboy.mvc.model.service.MemberService;
@@ -133,10 +135,10 @@ public class MemberController {
      *   401 인증 실패
      */
     //회원정보 전체를 업데이트하지않고 일부만 수정하는 거라서 Put에서 Patch매핑으로 변경
-    @PatchMapping("/members/{memberId}")
-    public ResponseEntity<?> updateMe(@RequestBody MemberUpdateRequest request, @PathVariable long memberId ) {
+    @PatchMapping("/members")
+    public ResponseEntity<?> updateMe(@RequestBody MemberUpdateRequest request,  @AuthenticationPrincipal CustomUserDetails loginUser) {
         //파라미터로 memberId받아서 해당회원의 정보를 수정
-
+    Long memberId = loginUser.getMemberId();
         Member member = memberService.getMemberById(memberId);
         //회원을 못찾는 경우 ->존재하지 않는 memberId인경우
         if (member == null) {
@@ -166,8 +168,8 @@ public class MemberController {
 
     //회원 조회
     @GetMapping("/members/")
-    public ResponseEntity<ApiResponse<Member>> getMemberInfo(HttpSession session) {
-        Long memberId = 1L;
+    public ResponseEntity<ApiResponse<Member>> getMemberInfo( @AuthenticationPrincipal CustomUserDetails loginUser) {
+        Long memberId = loginUser.getMemberId();
         try {
             Member member = memberService.getMemberById(memberId);
             return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(HttpStatus.OK, "회원정보가 조회되었습니다", member));
@@ -182,9 +184,9 @@ public class MemberController {
 
     //회원 탈퇴
     @DeleteMapping
-    public ResponseEntity<ApiResponse<String>> deleteMember() {
+    public ResponseEntity<ApiResponse<String>> deleteMember( @AuthenticationPrincipal CustomUserDetails loginUser) {
         //TODO : memberId 받아오기
-        Long memberId = 1L;
+        Long memberId = loginUser.getMemberId();
         try {
             memberService.deactivateMember(memberId);
             return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(HttpStatus.OK, "회원이 성공적으로 삭제되었습니다."));
@@ -198,9 +200,8 @@ public class MemberController {
 
     //회원 정보 업데이트
     @PatchMapping
-    public ResponseEntity<ApiResponse<String>> updateMember(@RequestBody MemberUpdateRequest request) {
-        //TODO : memberId 받아오기
-        Long memberId = 1L;
+    public ResponseEntity<ApiResponse<String>> updateMember(@RequestBody MemberUpdateRequest request,  @AuthenticationPrincipal CustomUserDetails loginUser) {
+        Long memberId = loginUser.getMemberId();
         try {
             memberService.updateMember(memberId, request);
             return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(HttpStatus.OK, "회원정보 업데이트에 성공했습니다."));

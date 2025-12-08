@@ -8,6 +8,7 @@ import com.codeboy.mvc.model.service.QuizRoomService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,12 +25,13 @@ public class QuizRoomController {
 
     //호스트 - 퀴즈방 만들기
     //TODO : 테스트용으로 memberId를 PathVariable로 넘김
-    @PostMapping("/create/{memberId}")
+    @PostMapping("/create")
     //TODO : 로그인 구현되면 memberId를 requestBody로 넘기지 말고 세션에서 가져오도록 하기
-    public ResponseEntity<ApiResponse<Long>> createQuizRoom(@PathVariable long memberId) {
+    public ResponseEntity<ApiResponse<Long>> createQuizRoom(@AuthenticationPrincipal CustomUserDetails loginUser) {
         try {
+            Long memberId = loginUser.getMemberId();
             //새로운 채팅방 생성하기
-            long quizRoomId = quizRoomService.createQuizRoom();
+            Long quizRoomId = quizRoomService.createQuizRoom();
             //3. QuizRoomMember 객체 생성
 //            Long memberId = 1L;
             QuizRoomMember quizRoomMember = new QuizRoomMember();
@@ -48,11 +50,10 @@ public class QuizRoomController {
     }
 
     //채팅방 참여하기
-    @PostMapping("/join")
+    @PostMapping("/join/{roomId}")
     //TODO : 로그인 구현되면 memberId를 requestBody로 넘기지 말고 세션에서 가져오도록 하기
-    public ResponseEntity<ApiResponse<String>> joinQuizRoom(@RequestBody JoinQuizRoomRequest request) {
-        long memberId = request.getMemberId();
-        long roomId = request.getRoomId();
+    public ResponseEntity<ApiResponse<String>> joinQuizRoom(@PathVariable Long roomId, @AuthenticationPrincipal CustomUserDetails loginUser) {
+        Long memberId = loginUser.getMemberId();
         try {
             //QuizRoomMember 생성
             QuizRoomMember quizRoomMember = new QuizRoomMember();
@@ -106,9 +107,10 @@ public class QuizRoomController {
     }
     //퀴즈방에서 나가기
     // 퀴즈방에서 나가기
-    @DeleteMapping("/{roomId}/member/{memberId}")
+    @DeleteMapping("/{roomId}/member")
     public ResponseEntity<ApiResponse<String>> leaveQuizRoom(@PathVariable long roomId,
-                                                             @PathVariable long memberId) {
+                                                             @AuthenticationPrincipal CustomUserDetails loginUser) {
+        Long memberId = loginUser.getMemberId();
         try {
             quizRoomService.leaveQuizRoom(roomId, memberId);
             return ResponseEntity
