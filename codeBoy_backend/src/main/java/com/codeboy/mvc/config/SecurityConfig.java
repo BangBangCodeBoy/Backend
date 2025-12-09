@@ -4,12 +4,10 @@ import com.codeboy.mvc.jwt.JWTFilter;
 import com.codeboy.mvc.jwt.JWTUtil;
 import com.codeboy.mvc.jwt.LoginFilter;
 import com.codeboy.mvc.model.service.CustomerUserDetailService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -25,7 +23,7 @@ public class SecurityConfig {
 
     private final CustomerUserDetailService customerUserDetailService;
     private final JWTUtil jwtUtil;
-    private final com.fasterxml.jackson.databind.ObjectMapper objectMapper; // ✅ 추가
+    private final com.fasterxml.jackson.databind.ObjectMapper objectMapper; //
 
 
     @Bean
@@ -33,7 +31,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // ✅ AuthenticationManager를 “내 UserDetailsService + BCrypt”로 명시적으로 구성
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         var builder = http.getSharedObject(org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder.class);
@@ -56,7 +53,10 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/join").permitAll()
+                        .requestMatchers("/", "/login", "/join",      "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/api-docs/**",
+                                "/swagger-resources/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN") // ✅ 보통 이렇게 씀
                         .anyRequest().authenticated()
                 );
@@ -66,13 +66,11 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 );
 
-        // ✅ 로그인 필터에 jwtUtil도 같이 넘겨주는 게 일반적
         http.addFilterAt(
-                new LoginFilter(authenticationManager, jwtUtil, objectMapper), // ✅ 수정
+                new LoginFilter(authenticationManager, jwtUtil, objectMapper),
                 UsernamePasswordAuthenticationFilter.class
         );
 
-        // ✅ JWTFilter도 필터 체인에 등록해야, 로그인 이후부터 토큰으로 인증됨
         http.addFilterBefore(
                 new JWTFilter(jwtUtil, customerUserDetailService),
                 UsernamePasswordAuthenticationFilter.class

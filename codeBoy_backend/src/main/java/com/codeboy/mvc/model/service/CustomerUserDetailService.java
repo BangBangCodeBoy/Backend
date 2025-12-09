@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CustomerUserDetailService implements UserDetailsService {
 
-    // MemberDao는 Spring이 주입해야 함 (NEW 하면 안됨)
     private final MemberDao memberDao;
 
     @Override
@@ -24,7 +23,6 @@ public class CustomerUserDetailService implements UserDetailsService {
         if (userData == null) {
             throw new UsernameNotFoundException("User not found: " + username);
         }
-
         return new CustomUserDetails(userData);
     }
 }

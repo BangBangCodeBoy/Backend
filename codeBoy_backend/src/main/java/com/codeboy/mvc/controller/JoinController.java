@@ -25,14 +25,5 @@ public class JoinController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.failure(HttpStatus.BAD_REQUEST, e.getMessage()));
         }
-
     }
-
 }
-
-//{
-//        "id": "testuser",
-//        "password": "1234",
-//        "nickname": "테스트유저",
-//        "email": "test@example.com"
-//        }

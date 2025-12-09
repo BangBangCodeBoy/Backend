@@ -94,7 +94,7 @@ public class UserScoreController {
     }
 
     // 특정 유저 점수 조회
-    @GetMapping
+    @GetMapping("/member")
     public ResponseEntity<ApiResponse<UserScore>> getUserScore(
             @AuthenticationPrincipal CustomUserDetails loginUser
     ) {

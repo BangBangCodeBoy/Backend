@@ -17,15 +17,14 @@ public class JoinService {
 
     public Long joinProcess(JoinRequest req) {
 
-
-        // 2) 중복 아이디 체크
+        // 1) 중복 아이디 체크
         Boolean exists = memberDao.existByUserId(req.getId());
 
         if (Boolean.TRUE.equals(exists)) {
             throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
         }
 
-        // 3) Member 매핑
+        // 2) Member 매핑
         Member member = new Member();
         member.setId(req.getId());
         member.setPassword(bCryptPasswordEncoder.encode(req.getPassword()));
@@ -37,7 +36,6 @@ public class JoinService {
         // 3) DB Insert
         int rows = memberDao.insertMember(member);
         if (rows != 1) {
-            // 혹시 모를 예외 상황 방어
             throw new IllegalStateException("회원 가입에 실패했습니다. (insert rows = " + rows + ")");
         }
 

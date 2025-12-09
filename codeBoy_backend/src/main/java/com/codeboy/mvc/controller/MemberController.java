@@ -39,92 +39,7 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    /**
-     * 회원가입
-     * POST /api/members
-     * RequestBody: { id, password, nickname, email }
-     * Response:
-     *   201 생성 성공
-     *   400 잘못된 요청
-     *   409 아이디/이메일 중복
-     */
-    @PostMapping("/member")
-    public ResponseEntity<?> signUp(@RequestBody Member member) {
-        // TODO: 아이디/이메일 중복 체크 로직은 나중에 추가
-        int result = memberService.signUp(member);
 
-        if (result == 1) {
-            // Location 헤더에 새로 생성된 리소스 URI 넣어줄 수도 있음
-            URI location = URI.create("/api/members/" + member.getMemberId());
-            
-            return ResponseEntity
-                    .status(HttpStatusCode.valueOf(201))
-                    .location(location)
-                    .body("회원가입 성공");
-        } else {
-            return ResponseEntity
-                    .status(HttpStatusCode.valueOf(400))
-                    .body("회원가입 실패");
-        }
-        //아이디/이메일 중복로직은 나중에 구
-    }
-
-    /**
-     * 로그인
-     * POST /api/auth/login
-     * RequestBody: { id, password }
-     * Response:
-     *   200 성공 시 { token, memberId, nickname }
-     *   401 실패 시 { error: "로그인 실패" }
-     */
-    @PostMapping("/auth/login")
-    public ResponseEntity<ApiResponse<?>> login(@RequestBody LoginRequest request, HttpSession session) {
-        try {
-            // Service를 통해 로그인 처리
-            Member member = memberService.login(request.getId(), request.getPassword());
-            
-            // 세션에 member_id 저장
-            session.setAttribute("memberId", member.getMemberId());
-            session.setAttribute("id", member.getId());
-            session.setAttribute("nickname", member.getNickname());
-            
-            // 성공 응답 반환
-           
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(ApiResponse.success(HttpStatus.OK, "로그인 성공",  
-                    	new HashMap<String, Object>() {private static final long serialVersionUID = 5698154608853982208L;
-
-						{
-                        put("memberId", member.getMemberId());
-                        put("nickname", member.getNickname());
-                        put("id", member.getId());
-                    }}));
-        } catch (IllegalArgumentException e) {
-            // 로그인 실패 (ID/비밀번호 오류 등)
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(ApiResponse.failure(HttpStatus.UNAUTHORIZED, e.getMessage()));
-        } catch (Exception e) {
-            // 기타 오류
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(ApiResponse.failure(HttpStatus.INTERNAL_SERVER_ERROR, "로그인 처리 중 오류가 발생했습니다."));
-        }
-    }
-    /**
-     * 로그아웃
-     * POST /api/auth/logout
-     * RequestBody: 없음
-     * Response:
-     *   204 성공 시 본문 없음
-     */
-    @PostMapping("/auth/logout")
-    public ResponseEntity<ApiResponse<Void>> logout(HttpSession session) {
-            // 세션 무효화
-            session.invalidate();
-            
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(ApiResponse.success(HttpStatus.OK, "로그아웃 성공", null));
-    	
-    }
     /**
      * 내 정보 수정
      * PUT /api/members/me
@@ -167,7 +82,7 @@ public class MemberController {
     }
 
     //회원 조회
-    @GetMapping("/members/")
+    @GetMapping("/members")
     public ResponseEntity<ApiResponse<Member>> getMemberInfo( @AuthenticationPrincipal CustomUserDetails loginUser) {
         Long memberId = loginUser.getMemberId();
         try {
@@ -185,7 +100,6 @@ public class MemberController {
     //회원 탈퇴
     @DeleteMapping
     public ResponseEntity<ApiResponse<String>> deleteMember( @AuthenticationPrincipal CustomUserDetails loginUser) {
-        //TODO : memberId 받아오기
         Long memberId = loginUser.getMemberId();
         try {
             memberService.deactivateMember(memberId);

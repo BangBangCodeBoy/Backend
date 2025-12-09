@@ -31,7 +31,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // 2. 토큰이 없거나 Bearer 형식이 아니면 → 그냥 다음 필터로 넘기고 끝
         if (authorization == null || !authorization.startsWith("Bearer ")) {
-            // System.out.println("JWTFilter: 토큰 없음");
+             System.out.println("JWTFilter: 토큰 없음");
             filterChain.doFilter(request, response);
             return;
         }
@@ -41,7 +41,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // 4. 토큰 만료 여부 검사
         if (jwtUtil.isExpired(token)) {
-            // System.out.println("JWTFilter: 토큰 만료");
+             System.out.println("JWTFilter: 토큰 만료");
             filterChain.doFilter(request, response);
             return;
         }

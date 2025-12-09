@@ -34,7 +34,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response)
             throws AuthenticationException {
-        // ✅ JSON 바디를 LoginRequest로 파싱
+
         LoginRequest loginRequest =
                 null;
         try {
@@ -43,12 +43,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             throw new RuntimeException(e);
         }
 
-
-        // 기본적으로 UsernamePasswordAuthenticationFilter가 제공하는 메서드 사용
         String username = loginRequest.getId();
         String password = loginRequest.getPassword();
 
-        // null일 수도 있으니 한 번 더 방어적으로 처리해도 됨
         if (username == null) {
             username = request.getParameter("username");
         }
@@ -56,11 +53,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             password = request.getParameter("password");
         }
 
-        // 인증 객체 생성 (권한 컬렉션은 null 또는 빈 리스트로 전달)
         UsernamePasswordAuthenticationToken authRequest =
                 new UsernamePasswordAuthenticationToken(username, password);
 
-        // AuthenticationManager에게 실제 인증 위임
         return authenticationManager.authenticate(authRequest);
     }
 
@@ -91,9 +86,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write("{\"token\":\"" + token + "\"}");
         response.getWriter().flush();
-
-        // 4) 🔥 더 이상 체인을 안 태운다. 여기서 응답 끝!
-        // chain.doFilter(request, response);  <-- 이건 제거
     }
 
 
