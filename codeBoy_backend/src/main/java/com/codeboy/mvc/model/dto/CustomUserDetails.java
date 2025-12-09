@@ -26,6 +26,10 @@ public class CustomUserDetails implements UserDetails {
         });
         return collection;
     }
+    public String getNickname() {
+        return member.getNickname();
+    }
+
 
     public Long getMemberId() {
         return member.getMemberId(); // member 엔티티에 memberId 필드 있다고 가정

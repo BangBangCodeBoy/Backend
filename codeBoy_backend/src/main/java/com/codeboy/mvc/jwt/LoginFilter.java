@@ -2,11 +2,14 @@ package com.codeboy.mvc.jwt;
 
 import com.codeboy.mvc.model.dto.CustomUserDetails;
 import com.codeboy.mvc.model.dto.request.LoginRequest;
+import com.codeboy.mvc.model.dto.response.ApiResponse;
+import com.codeboy.mvc.model.dto.response.LoginResponse;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -72,20 +75,30 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         System.out.println("login success: " + authResult.getName());
 
-        // 1) 인증된 사용자 정보 가져오기
+        // 1) 인증된 사용자 정보
         CustomUserDetails principal = (CustomUserDetails) authResult.getPrincipal();
         String username = principal.getUsername();
-        String role = principal.getAuthorities().iterator().next().getAuthority(); // 예: "ROLE_USER"
+        String role = principal.getAuthorities().iterator().next().getAuthority();
 
-        // 2) JWT 토큰 생성 (jwtUtil 메서드 형태에 맞게 수정)
-        // 예시: createJwt(아이디, 역할, 만료시간ms)
-        String token = jwtUtil.createJwt(username, role, 60 * 60 * 1000L); // 1시간짜리 토큰
+        // 2) JWT 생성
+        String token = jwtUtil.createJwt(username, role, 60 * 60 * 1000L);
 
-        // 3) 응답 헤더/바디에 토큰 담기
+        // 3) LoginResponse 생성
+        LoginResponse loginResponse = new LoginResponse(
+                token,
+                principal.getMemberId(),
+                principal.getUsername(),     // 혹은 username
+                principal.getNickname()
+        );
+
+        // 4) ApiResponse<LoginResponse> 생성
+        ApiResponse<LoginResponse> apiResponse =
+                ApiResponse.success(HttpStatus.OK, "로그인 성공", loginResponse);
+
+        // 5) JSON으로 내려주기
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write("{\"token\":\"" + token + "\"}");
-        response.getWriter().flush();
+        objectMapper.writeValue(response.getWriter(), apiResponse);
     }
 
 
@@ -99,9 +112,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             throws IOException, ServletException {
 
         System.out.println("login fail: " + failed.getMessage());
+
+        ApiResponse<Void> apiResponse =
+                ApiResponse.failure(HttpStatus.UNAUTHORIZED, "로그인에 실패했습니다."); // or failed.getMessage()
+
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write("{\"message\":\"로그인에 실패했습니다.\"}");
+        objectMapper.writeValue(response.getWriter(), apiResponse);
     }
-
 }
