@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/member")
 @Tag(name="Member RESTful API", description = "Member CRUD를 할 수 있는 REST API")
 public class MemberController {
 
@@ -39,50 +39,8 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-
-    /**
-     * 내 정보 수정
-     * PUT /api/members/me
-     * RequestBody: { nickname?, email?, password? }
-     * Response:
-     *   200 성공 시 수정된 정보 or 메시지
-     *   400 잘못된 요청
-     *   401 인증 실패
-     */
-    //회원정보 전체를 업데이트하지않고 일부만 수정하는 거라서 Put에서 Patch매핑으로 변경
-    @PatchMapping("/members")
-    public ResponseEntity<?> updateMe(@RequestBody MemberUpdateRequest request,  @AuthenticationPrincipal CustomUserDetails loginUser) {
-        //파라미터로 memberId받아서 해당회원의 정보를 수정
-    Long memberId = loginUser.getMemberId();
-        Member member = memberService.getMemberById(memberId);
-        //회원을 못찾는 경우 ->존재하지 않는 memberId인경우
-        if (member == null) {
-            return ResponseEntity
-                    .status(HttpStatusCode.valueOf(401))
-                    .body("인증된 회원을 찾을 수 없습니다.");
-        }
-
-        //닉네임과 이메일은 바꿀 수 있다고 가정. 필요하면 ID도..?
-        if (request.getNickname() != null) {
-            member.setNickname(request.getNickname());
-            return ResponseEntity
-                    .status(HttpStatusCode.valueOf(401))
-                    .body("닉네임이 없습니다..");
-        }
-        if (request.getEmail() != null) {
-            member.setEmail(request.getEmail());
-            return ResponseEntity
-                    .status(HttpStatusCode.valueOf(401))
-                    .body("이메일이 없습니다");
-        }
-
-        return ResponseEntity
-                .status(HttpStatusCode.valueOf(200))
-                .body("회원정보 수정 성공");
-    }
-
     //회원 조회
-    @GetMapping("/members")
+    @GetMapping
     public ResponseEntity<ApiResponse<Member>> getMemberInfo( @AuthenticationPrincipal CustomUserDetails loginUser) {
         Long memberId = loginUser.getMemberId();
         try {

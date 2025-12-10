@@ -56,6 +56,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             password = request.getParameter("password");
         }
 
+
+
         UsernamePasswordAuthenticationToken authRequest =
                 new UsernamePasswordAuthenticationToken(username, password);
 
@@ -81,14 +83,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = principal.getAuthorities().iterator().next().getAuthority();
 
         // 2) JWT 생성
-        String token = jwtUtil.createJwt(username, role, 60 * 60 * 1000L);
+        String accessToken = jwtUtil.createJwt(username, role, 60 * 60 * 1000L);
+        String refreshToken = jwtUtil.createJwt(username, role, 7 * 24 * 60 * 60 * 1000L);
+
 
         // 3) LoginResponse 생성
         LoginResponse loginResponse = new LoginResponse(
-                token,
-                principal.getMemberId(),
-                principal.getUsername(),     // 혹은 username
-                principal.getNickname()
+                accessToken,
+                refreshToken,
+                principal.getMemberId()
         );
 
         // 4) ApiResponse<LoginResponse> 생성
@@ -114,7 +117,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         System.out.println("login fail: " + failed.getMessage());
 
         ApiResponse<Void> apiResponse =
-                ApiResponse.failure(HttpStatus.UNAUTHORIZED, "로그인에 실패했습니다."); // or failed.getMessage()
+                ApiResponse.failure(HttpStatus.UNAUTHORIZED,  failed.getMessage()); // or failed.getMessage()
 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json;charset=UTF-8");

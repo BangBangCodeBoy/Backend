@@ -40,21 +40,27 @@ public class MemberServiceImpl implements MemberService {
     }
 
 
-    public void updateMember(Long memberId, MemberUpdateRequest memberUpdateRequest){
+    public void updateMember(Long memberId, MemberUpdateRequest memberUpdateRequest) {
         isMemberExist(memberId);
-        //중복된 id, email이 있는지 검증 로직
-        String id = memberUpdateRequest.getId();
+
+        // 현재 DB에 저장된 회원 정보
+        Member current = memberDao.selectMemberById(memberId);
+        if (current == null) {
+            throw new IllegalStateException("회원 정보 수정 실패: 존재하지 않는 회원입니다. memberId: " + memberId);
+        }
+
         String nickname = memberUpdateRequest.getNickname();
         String email = memberUpdateRequest.getEmail();
-        validateMemberUpdate(id, nickname, email);
+
+        // ✅ 내 현재 값과 비교해서, 실제로 바뀌는 필드만 중복체크
+        validateMemberUpdate(current,  nickname, email);
 
         int affectedRows = memberDao.updateMemberById(memberId, memberUpdateRequest);
-
         if (affectedRows == 0) {
             throw new IllegalStateException("회원 정보 수정에 실패하였습니다. memberId: " + memberId);
         }
+    }
 
-    };
     public boolean checkIdDuplicate(String id) {
         if (id == null) {
             throw new IllegalArgumentException("유효하지 않은 Id 입니다.");
@@ -95,17 +101,24 @@ public class MemberServiceImpl implements MemberService {
     }
 
     // 최종 제출 시 전체 검증
-    public void validateMemberUpdate(String id, String nickname, String email) {
-        if (memberDao.existsId(id)) {
-            throw new IllegalArgumentException("중복된 ID입니다.");
+// 현재 회원 정보 + 변경 요청값 기준 검증
+    public void validateMemberUpdate(Member current, String nickname, String email) {
+
+        // 닉네임
+        if (nickname != null && !nickname.equals(current.getNickname())) {
+            if (memberDao.existsNickname(nickname)) {
+                throw new IllegalArgumentException("중복된 닉네임입니다.");
+            }
         }
-        if (memberDao.existsNickname(nickname)) {
-            throw new IllegalArgumentException("중복된 닉네임입니다.");
-        }
-        if (memberDao.existsEmail(email)) {
-            throw new IllegalArgumentException("중복된 이메일입니다.");
+
+        // 이메일
+        if (email != null && !email.equals(current.getEmail())) {
+            if (memberDao.existsEmail(email)) {
+                throw new IllegalArgumentException("중복된 이메일입니다.");
+            }
         }
     }
+
     
     // 로그인
     public Member login(String id, String password) {
