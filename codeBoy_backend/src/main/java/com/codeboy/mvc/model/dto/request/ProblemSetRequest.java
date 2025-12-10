@@ -1,4 +1,4 @@
-package com.codeboy.mvc.model.dto;
+package com.codeboy.mvc.model.dto.request;
 
 import com.codeboy.common.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -6,21 +6,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.sql.Timestamp;
 
-@Schema(description = "유저제작문제세트 DTO")
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@ToString
-public class UserProblemSet {
-	private Long userProblemSetId;
+@Schema(description="유저 문제 세트 등록 DTO")
+public class ProblemSetRequest {
     private String problemSetTitle;
     private Timestamp createdAt;
-	private Long memberId;
     private Category category;
-    private int commentCount;
 }

@@ -16,12 +16,10 @@ import lombok.Setter;
 public class UserProblem {
 	private Long userProblemId;
 	private String problemDescription;
-	private Category category;
 	private String choice1;
 	private String choice2;
 	private String choice3;
 	private String choice4;
     private int answerChoice;
-	private int commentCount;
 	private Long userProblemSetId;
 }

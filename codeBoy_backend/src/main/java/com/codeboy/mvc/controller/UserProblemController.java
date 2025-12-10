@@ -55,6 +55,7 @@ public class UserProblemController {
             @RequestBody List<UserProblem> userProblems,
             @AuthenticationPrincipal CustomUserDetails loginUser
     ) {
+        System.out.println("문제세트 번호: "+ userProblemSetId);
         Long memberId= loginUser.getMemberId();
         if (memberId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -66,8 +67,10 @@ public class UserProblemController {
             for (UserProblem p : userProblems) {
                 p.setUserProblemSetId(userProblemSetId);
             }
+            System.out.println("디버깅1");
 
             int inserted = userProblemService.addUserProblems(userProblems);
+            System.out.println("디버깅2");
 
             if (inserted == 0) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
