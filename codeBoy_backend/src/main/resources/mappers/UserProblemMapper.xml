@@ -16,10 +16,10 @@
     <!-- 문제 등록-->
     <insert id="insertUserProblemList" parameterType="java.util.List">
         INSERT INTO user_problem
-        (problem_description, category, choice_1, choice_2, choice_3, choice_4, answer, comment_count, user_problem_set_id)
+        (problem_description, choice_1, choice_2, choice_3, choice_4, answer, user_problem_set_id)
         VALUES
         <foreach collection="list" item="item" separator=",">
-            (#{item.problemDescription}, #{item.category}, #{item.choice1}, #{item.choice2}, #{item.choice3}, #{item.choice4}, #{item.answer}, #{item.commentCount}, #{item.userProblemSetId})
+            (#{item.problemDescription}, #{item.choice1}, #{item.choice2}, #{item.choice3}, #{item.choice4}, #{item.answer}, #{item.userProblemSetId})
         </foreach>
     </insert>
 
