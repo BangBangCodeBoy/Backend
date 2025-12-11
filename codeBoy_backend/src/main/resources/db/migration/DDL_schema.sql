@@ -10,7 +10,16 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema board_test
+-- -----------------------------------------------------
 
+-- -----------------------------------------------------
+-- Schema board_test
+-- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `board_test` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 USE board_test;
 
@@ -83,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `board_test`.`problem` (
   `choice_2` VARCHAR(255) NOT NULL,
   `choice_3` VARCHAR(255) NOT NULL,
   `choice_4` VARCHAR(255) NOT NULL,
-  `answer_coice` TINYINT NOT NULL,
+  `answer` VARCHAR(10) NOT NULL,
   `category` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`problem_id`))
 ENGINE = InnoDB
@@ -181,7 +190,7 @@ CREATE TABLE IF NOT EXISTS `board_test`.`user_problem` (
   `choice_2` VARCHAR(255) NOT NULL,
   `choice_3` VARCHAR(255) NOT NULL,
   `choice_4` VARCHAR(255) NOT NULL,
-   `answer_coice` TINYINT NOT NULL,
+  `answer` VARCHAR(10) NOT NULL,
   `comment_count` INT NOT NULL DEFAULT 0,
   `user_problem_set_id` BIGINT NOT NULL,
   PRIMARY KEY (`user_problem_id`),
