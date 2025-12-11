@@ -1,7 +1,8 @@
 package com.codeboy.mvc.model.service;
 
-import com.codeboy.ai.dto.AIProblemDto;
-import com.codeboy.ai.dto.AIProblemRequest;
+
+import com.codeboy.mvc.model.dto.AIProblemDto;
+import com.codeboy.mvc.model.dto.request.AIProblemRequest;
 
 import java.util.List;
 
