@@ -82,4 +82,28 @@ public class QuizRoomService{
         }
     }
 
+    public void leaveQuizRoom(long roomId, long memberId) {
+
+        // 1) 현재 방에 이 멤버가 실제로 있는지 확인
+        QuizRoomMember quizRoomMember = quizRoomDao.selectQuizRoomMember(roomId, memberId);
+
+        if (quizRoomMember == null) {
+            throw new IllegalArgumentException("해당 멤버는 이 퀴즈방에 참가 중이 아닙니다.");
+        }
+
+        // TODO: 호스트가 나갈 때의 정책이 따로 있다면 여기서 처리
+        // if (quizRoomMember.getIsHost()) { ... }
+
+        // 2) 퀴즈방 멤버 목록에서 삭제
+        int deleted = quizRoomDao.deleteQuizRoomMember(roomId, memberId);
+
+        if (deleted != 1) {
+            throw new IllegalStateException("퀴즈방 퇴장 처리에 실패했습니다.");
+        }
+
+        // TODO: 마지막 사람이 나가면 방 자체를 삭제할지 여부는 여기서 추가로 정책 결정 가능
+        // int remains = quizRoomDao.countMembersInRoom(roomId);
+        // if (remains == 0) { quizRoomDao.deleteQuizRoom(roomId); }
+    }
+
 }

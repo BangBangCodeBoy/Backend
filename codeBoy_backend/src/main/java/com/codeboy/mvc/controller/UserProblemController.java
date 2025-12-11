@@ -1,5 +1,6 @@
 package com.codeboy.mvc.controller;
 
+import com.codeboy.mvc.model.dto.CustomUserDetails;
 import com.codeboy.mvc.model.dto.UserProblem;
 import com.codeboy.mvc.model.dto.response.ApiResponse; // 실제 패키지에 맞게 수정
 import com.codeboy.mvc.model.service.UserProblemService;
@@ -8,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,9 +53,10 @@ public class UserProblemController {
     public ResponseEntity<ApiResponse<Void>> createUserProblems(
             @PathVariable Long userProblemSetId,
             @RequestBody List<UserProblem> userProblems,
-            HttpSession session
+            @AuthenticationPrincipal CustomUserDetails loginUser
     ) {
-        Long memberId = (Long) session.getAttribute("memberId");
+        System.out.println("문제세트 번호: "+ userProblemSetId);
+        Long memberId= loginUser.getMemberId();
         if (memberId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(ApiResponse.failure(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."));
@@ -64,8 +67,10 @@ public class UserProblemController {
             for (UserProblem p : userProblems) {
                 p.setUserProblemSetId(userProblemSetId);
             }
+            System.out.println("디버깅1");
 
             int inserted = userProblemService.addUserProblems(userProblems);
+            System.out.println("디버깅2");
 
             if (inserted == 0) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -89,9 +94,9 @@ public class UserProblemController {
     public ResponseEntity<ApiResponse<Void>> updateUserProblem(
             @PathVariable Long userProblemId,
             @RequestBody UserProblem userProblem,
-            HttpSession session
+            @AuthenticationPrincipal CustomUserDetails loginUser
     ) {
-        Long memberId = (Long) session.getAttribute("memberId");
+        Long memberId=  loginUser.getMemberId();
         if (memberId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(ApiResponse.failure(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."));
@@ -123,9 +128,9 @@ public class UserProblemController {
     @DeleteMapping("/{userProblemId}")
     public ResponseEntity<ApiResponse<Void>> deleteUserProblem(
             @PathVariable Long userProblemId,
-            HttpSession session
+            @AuthenticationPrincipal CustomUserDetails loginUser
     ) {
-        Long memberId = (Long) session.getAttribute("memberId");
+        Long memberId=  loginUser.getMemberId();
         if (memberId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(ApiResponse.failure(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."));

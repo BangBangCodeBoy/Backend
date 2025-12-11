@@ -1,10 +1,15 @@
 package com.codeboy.mvc.jwt;
 
+import com.codeboy.mvc.model.dto.CustomUserDetails;
+import com.codeboy.mvc.model.dto.request.LoginRequest;
+import com.codeboy.mvc.model.dto.response.ApiResponse;
+import com.codeboy.mvc.model.dto.response.LoginResponse;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,6 +22,13 @@ import java.io.IOException;
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
+    private final JWTUtil jwtUtil;
+    private final com.fasterxml.jackson.databind.ObjectMapper objectMapper; // ✅ 추가
+
+    {
+        // 인스턴스 초기화 블록 or 생성자에서 설정
+        setFilterProcessesUrl("/login");  // ✅ 이 URL로 오는 요청을 로그인으로 처리
+    }
 
     /**
      * 로그인 시도 시 호출되는 메서드
@@ -26,11 +38,17 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                                                 HttpServletResponse response)
             throws AuthenticationException {
 
-        // 기본적으로 UsernamePasswordAuthenticationFilter가 제공하는 메서드 사용
-        String username = obtainUsername(request);
-        String password = obtainPassword(request);
+        LoginRequest loginRequest =
+                null;
+        try {
+            loginRequest = objectMapper.readValue(request.getInputStream(), LoginRequest.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-        // null일 수도 있으니 한 번 더 방어적으로 처리해도 됨
+        String username = loginRequest.getId();
+        String password = loginRequest.getPassword();
+
         if (username == null) {
             username = request.getParameter("username");
         }
@@ -38,11 +56,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             password = request.getParameter("password");
         }
 
-        // 인증 객체 생성 (권한 컬렉션은 null 또는 빈 리스트로 전달)
+
+
         UsernamePasswordAuthenticationToken authRequest =
                 new UsernamePasswordAuthenticationToken(username, password);
 
-        // AuthenticationManager에게 실제 인증 위임
         return authenticationManager.authenticate(authRequest);
     }
 
@@ -59,13 +77,33 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         System.out.println("login success: " + authResult.getName());
 
-        // JWT 쓰고 싶으면 여기에서 토큰 만들어서 헤더에 담아주면 됨
-        // response.addHeader("Authorization", "Bearer " + token);
+        // 1) 인증된 사용자 정보
+        CustomUserDetails principal = (CustomUserDetails) authResult.getPrincipal();
+        String username = principal.getUsername();
+        String role = principal.getAuthorities().iterator().next().getAuthority();
 
-        // 기본 흐름 계속 진행
-        // (필요에 따라 chain.doFilter 호출 여부 선택)
-        chain.doFilter(request, response);
+        // 2) JWT 생성
+        String accessToken = jwtUtil.createJwt(username, role, 60 * 60 * 1000L);
+        String refreshToken = jwtUtil.createJwt(username, role, 7 * 24 * 60 * 60 * 1000L);
+
+
+        // 3) LoginResponse 생성
+        LoginResponse loginResponse = new LoginResponse(
+                accessToken,
+                refreshToken,
+                principal.getMemberId()
+        );
+
+        // 4) ApiResponse<LoginResponse> 생성
+        ApiResponse<LoginResponse> apiResponse =
+                ApiResponse.success(HttpStatus.OK, "로그인 성공", loginResponse);
+
+        // 5) JSON으로 내려주기
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("application/json;charset=UTF-8");
+        objectMapper.writeValue(response.getWriter(), apiResponse);
     }
+
 
     /**
      * 로그인 실패 시 호출되는 메서드
@@ -77,6 +115,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             throws IOException, ServletException {
 
         System.out.println("login fail: " + failed.getMessage());
+
+        ApiResponse<Void> apiResponse =
+                ApiResponse.failure(HttpStatus.UNAUTHORIZED,  failed.getMessage()); // or failed.getMessage()
+
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json;charset=UTF-8");
+        objectMapper.writeValue(response.getWriter(), apiResponse);
     }
 }

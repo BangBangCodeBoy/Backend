@@ -2,8 +2,10 @@ package com.codeboy.mvc.controller;
 
 import java.util.List;
 
+import com.codeboy.mvc.model.dto.CustomUserDetails;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import com.codeboy.mvc.model.dto.UserScore;
@@ -30,9 +32,9 @@ public class UserScoreController {
     @PostMapping
     public ResponseEntity<ApiResponse<Void>> createUserScore(
             @RequestBody UserScore userScore,
-            HttpSession session
+            @AuthenticationPrincipal CustomUserDetails loginUser
     ) {
-        Long memberId = (Long) session.getAttribute("memberId");
+        Long memberId =  loginUser.getMemberId();
         if (memberId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(ApiResponse.failure(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."));
@@ -67,8 +69,8 @@ public class UserScoreController {
 
     // 전체 유저 점수 조회
     @GetMapping
-    public ResponseEntity<ApiResponse<List<UserScore>>> getAllUserScores(HttpSession session) {
-        Long memberId = (Long) session.getAttribute("memberId");
+    public ResponseEntity<ApiResponse<List<UserScore>>> getAllUserScores( @AuthenticationPrincipal CustomUserDetails loginUser) {
+        Long memberId =  loginUser.getMemberId();
         if (memberId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(ApiResponse.failure(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."));
@@ -92,18 +94,11 @@ public class UserScoreController {
     }
 
     // 특정 유저 점수 조회
-    @GetMapping("/{memberId}")
+    @GetMapping("/member")
     public ResponseEntity<ApiResponse<UserScore>> getUserScore(
-            @PathVariable Long memberId,
-            HttpSession session
+            @AuthenticationPrincipal CustomUserDetails loginUser
     ) {
-        Long loginMemberId = (Long) session.getAttribute("memberId");
-        if (loginMemberId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(ApiResponse.failure(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."));
-        }
-
-       
+        Long memberId = loginUser.getMemberId();
 
         try {
             UserScore userScore = userScoreService.getUserScoreById(memberId);
@@ -130,9 +125,9 @@ public class UserScoreController {
     @PutMapping
     public ResponseEntity<ApiResponse<Void>> updateUserScore(
             @RequestBody UserScore userScore,
-            HttpSession session
+            @AuthenticationPrincipal CustomUserDetails loginUser
     ) {
-        Long memberId = (Long) session.getAttribute("memberId");
+        Long memberId =   loginUser.getMemberId();
         if (memberId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(ApiResponse.failure(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."));

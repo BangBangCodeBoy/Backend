@@ -13,6 +13,5 @@ package com.codeboy.mvc.model.dto.request;
 @Schema(description="유저 정보 수정 DTO")
 public class MemberUpdateRequest {
     private String nickname;
-    private String id;
     private String email;
 }

@@ -1,6 +1,8 @@
 package com.codeboy.mvc.controller;
 
+import com.codeboy.mvc.model.dto.CustomUserDetails;
 import com.codeboy.mvc.model.dto.UserProblemSet;
+import com.codeboy.mvc.model.dto.request.ProblemSetRequest;
 import com.codeboy.mvc.model.dto.response.ApiResponse; // 실제 패키지에 맞게 수정
 import com.codeboy.mvc.model.service.UserProblemSetService;
 
@@ -10,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,8 +44,8 @@ public class UserProblemSetController {
 
     // 마이페이지 - 내가 만든 문제세트 조회
     @GetMapping("/me")
-    public ResponseEntity<ApiResponse<List<UserProblemSet>>> getMyUserProblemSet(HttpSession session) {
-        Long memberId = (Long) session.getAttribute("memberId");
+    public ResponseEntity<ApiResponse<List<UserProblemSet>>> getMyUserProblemSet( @AuthenticationPrincipal CustomUserDetails loginUser) {
+        Long memberId = loginUser.getMemberId();
         System.out.println(memberId);
         if (memberId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -68,8 +71,8 @@ public class UserProblemSetController {
 
     // 마이페이지 - 문제세트 생성
     @PostMapping
-    public ResponseEntity<ApiResponse<?>> createMyUserProblemSet(HttpSession session) {
-        Long memberId = (Long) session.getAttribute("memberId");
+    public ResponseEntity<ApiResponse<Long>> createMyUserProblemSet(@RequestBody ProblemSetRequest problemSetRequest , @AuthenticationPrincipal CustomUserDetails loginUser) {
+        Long memberId = loginUser.getMemberId();
         if (memberId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(ApiResponse.failure(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."));
@@ -84,10 +87,9 @@ public class UserProblemSetController {
             //UserProblemSetMapper에도 generateKey를 추가해서 PK값을 set에 담을 수 있었다.
             UserProblemSet set = new UserProblemSet();
             set.setMemberId(memberId);
-            System.out.println(set);
-            
+
             int result = userProblemSetService.createUserProblemSet(set);
-            System.out.println(set);
+            Long userProblemSetId = set.getUserProblemSetId();
 
             if (result == 0) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -95,7 +97,7 @@ public class UserProblemSetController {
             }
 
             return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(ApiResponse.success(HttpStatus.CREATED, "유저 문제세트 생성 성공", set));
+                    .body(ApiResponse.success(HttpStatus.CREATED, "유저 문제세트 생성 성공", userProblemSetId));
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -110,9 +112,9 @@ public class UserProblemSetController {
     @DeleteMapping("/{userProblemSetId}")
     public ResponseEntity<ApiResponse<Void>> deleteUserProblemSet(
             @PathVariable Long userProblemSetId,
-            HttpSession session
+            @AuthenticationPrincipal CustomUserDetails loginUser
     ) {
-        Long memberId = (Long) session.getAttribute("memberId");
+        Long memberId= loginUser.getMemberId();
         if (memberId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(ApiResponse.failure(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."));

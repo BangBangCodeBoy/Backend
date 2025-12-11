@@ -3,12 +3,11 @@ package com.codeboy.mvc.config;
 import com.codeboy.mvc.jwt.JWTFilter;
 import com.codeboy.mvc.jwt.JWTUtil;
 import com.codeboy.mvc.jwt.LoginFilter;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.codeboy.mvc.model.service.CustomerUserDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -16,15 +15,20 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-@Configuration
-@EnableWebSecurity
+import java.util.List;
+
 @RequiredArgsConstructor
+@EnableWebSecurity
+@Configuration
 public class SecurityConfig {
 
-    private final AuthenticationConfiguration authenticationConfiguration;
-    private final ObjectMapper objectMapper; // 필요 없으면 지워도 됨
+    private final CustomerUserDetailService customerUserDetailService;
     private final JWTUtil jwtUtil;
+    private final com.fasterxml.jackson.databind.ObjectMapper objectMapper; //
 
 
     @Bean
@@ -32,45 +36,70 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // 특정 Http 요청에 대한 웹 기반 보안 구성
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        var builder = http.getSharedObject(org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder.class);
 
-        // 기본 제공 로그인/HTTP Basic/CSRF 비활성화
+        builder
+                .userDetailsService(customerUserDetailService)
+                .passwordEncoder(bCryptPasswordEncoder());
+
+        return builder.build();
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   AuthenticationManager authenticationManager) throws Exception {
+
         http
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .csrf(AbstractHttpConfigurer::disable);
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
-        // 인가(접근 권한) 설정
+
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/join").permitAll()
-                        .requestMatchers("/admin").hasRole("ADMIN") // "ADMIB" 오타 수정
+                        .requestMatchers("/", "/login", "/api/join",      "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/api-docs/**",
+                                "/swagger-resources/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN") // ✅ 보통 이렇게 씀
                         .anyRequest().authenticated()
                 );
 
-        // 세션 사용하지 않는(JWT 등) 방식으로 설정
         http
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 );
 
-        // 커스텀 로그인 필터 추가 (UsernamePasswordAuthenticationFilter 위치에 대체)
-        AuthenticationManager authenticationManager =
-                authenticationConfiguration.getAuthenticationManager();
-
         http.addFilterAt(
-                new LoginFilter(authenticationManager),
+                new LoginFilter(authenticationManager, jwtUtil, objectMapper),
+                UsernamePasswordAuthenticationFilter.class
+        );
+
+        http.addFilterBefore(
+                new JWTFilter(jwtUtil, customerUserDetailService),
                 UsernamePasswordAuthenticationFilter.class
         );
 
         return http.build();
     }
-
-    // AuthenticationManager를 Bean으로도 노출하고 싶으면 (선택사항)
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager();
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        // 프론트 주소 허용
+        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        // 모든 메서드 허용
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        // 모든 헤더 허용
+        configuration.setAllowedHeaders(List.of("*"));
+        // 쿠키/Authorization 헤더 허용 (JWT 쓸 때 보통 true)
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

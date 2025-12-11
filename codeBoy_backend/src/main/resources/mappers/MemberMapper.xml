@@ -20,17 +20,16 @@
         UPDATE member
         <set>
             <if test="update.nickname != null">
-         nickname = #{update.nickname}
+                nickname = #{update.nickname},
             </if>
-            <if test="update.id != null">
-                id = #{update.id}
-            </if>
+
             <if test="update.email != null">
                 email = #{update.email}
             </if>
         </set>
         WHERE member_id = #{memberId}
     </update>
+
 
     <select id="existsId" parameterType="String" resultType="boolean">
         SELECT CASE WHEN COUNT(1) > 0 THEN TRUE ELSE FALSE END
@@ -56,7 +55,7 @@
         WHERE member_id = #{memberId}
     </select>
 
-    <insert id="insertMember" parameterType="Member">
+    <insert id="insertMember" parameterType="Member" useGeneratedKeys="true" keyProperty="memberId" keyColumn="member_id">
         INSERT INTO member (ID, password, nickname, email, is_active, signup_date, role)
         VALUES (#{id}, #{password}, #{nickname}, #{email}, 1, NOW(), #{role});
     </insert>

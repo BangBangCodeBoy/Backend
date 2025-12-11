@@ -2,9 +2,9 @@
 -- Mon Nov 24 16:21:44 2025
 -- Model: New Model    Version: 1.0
 -- MySQL Workbench Forward Engineering
-DROP DATABASE IF EXISTS board_test;
-CREATE DATABASE board_test;
-USE board_test;
+ -- DROP DATABASE IF EXISTS board_test;
+-- CREATE DATABASE board_test;
+ USE board_test;
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
@@ -41,16 +41,6 @@ CREATE TABLE IF NOT EXISTS `board_test`.`member` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
--- SELECT DATABASE();     -- 지금 선택된 DB가 뭔지
-SHOW TABLES;           -- 그 DB에 어떤 테이블이 있는지
-SHOW CREATE TABLE member;  -- 진짜 member 테이블 정의
--- SELECT * FROM member;  -- 진짜 데이터 조회
-
-
-
-
-
--- SELECT * FROM member;  -- 진짜 데이터 조회
 
 
 -- -----------------------------------------------------
@@ -109,23 +99,6 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
-INSERT INTO problem (problem_description, choice_1, choice_2, choice_3, choice_4, answer, category)
-VALUES
-('문제1?',
- 'SELECT', 'WHERE', 'ORDER BY', 'GROUP BY', 'WHERE', 'SQLD');
-
-INSERT INTO problem (problem_description, choice_1, choice_2, choice_3, choice_4, answer, category)
-VALUES
-('문제2',
- 'class', 'extends', 'new', 'this', 'new', 'SQLD');
-
-INSERT INTO problem (problem_description, choice_1, choice_2, choice_3, choice_4, answer, category)
-VALUES
-('문제3',
- 'GET', 'POST', 'PUT', 'DELETE', 'POST', 'INFOENGINEERING');
-
-  SELECT* FROM problem;
-
 -- -----------------------------------------------------
 -- Table `board_test`.`incorrect_note`
 -- -----------------------------------------------------
@@ -164,12 +137,6 @@ CREATE TABLE IF NOT EXISTS `board_test`.`incorrect_note` (
   COLLATE = utf8mb4_0900_ai_ci;
 
 
-
--- 조회
- SELECT * FROM incorrect_note;
-
-
-
 -- -----------------------------------------------------
 -- Table `board_test`.`quiz_room`
 -- -----------------------------------------------------
@@ -179,13 +146,6 @@ CREATE TABLE IF NOT EXISTS `board_test`.`quiz_room` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
-
--- INSERT INTO
--- quiz_room()
--- VALUES();
---
--- SELECT * FROM quiz_room;--
-
 
 -- -----------------------------------------------------
 -- Table `board_test`.`quiz_room_member`
@@ -242,28 +202,6 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
-INSERT INTO user_problem (problem_description, choice_1, choice_2, choice_3, choice_4, answer, category, user_problem_set_id)
-VALUES
-('유저 문제1',
- 'SELECT', 'WHERE', 'ORDER BY', 'GROUP BY', 'WHERE', 'INFOENGINEERING', 1);
-
-INSERT INTO user_problem (problem_description, choice_1, choice_2, choice_3, choice_4, answer, category,  user_problem_set_id)
-VALUES
-('유저 문제2',
- 'class', 'extends', 'new', 'this', 'new', 'INFOENGINEERING', 1);
-
-INSERT INTO user_problem (problem_description, choice_1, choice_2, choice_3, choice_4, answer, category,  user_problem_set_id)
-VALUES
-('유저 문제3',
- 'GET', 'POST', 'PUT', 'DELETE', 'POST', 'SQLD', 1);
-
---   SELECT* FROM problem;
-  --   SELECT * FROM user_problem;
-
-
--- -----------------------------------------------------
--- Table `board_test`.`user_score`
--- -----------------------------------------------------
 -- user_score테이블고유의 아이디를 가지고있도록 변경. member_id가 이전에는 pk역할을했엇음
 -- 로직에 맞게 member_id를 member테이블에서 외래키로 가져오도록 변경
 CREATE TABLE IF NOT EXISTS user_score (
@@ -279,7 +217,6 @@ CREATE TABLE IF NOT EXISTS user_score (
 
 ALTER TABLE board_test.user_score
 ADD CONSTRAINT user_score_unique_member_id UNIQUE (member_id);
-
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
