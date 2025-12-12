@@ -81,9 +81,11 @@ public class UserProblemController {
                     .body(ApiResponse.success(HttpStatus.CREATED, "문제 등록 성공", null));
 
         } catch (IllegalArgumentException e) {
+
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ApiResponse.failure(HttpStatus.BAD_REQUEST, e.getMessage()));
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(ApiResponse.failure(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류로 문제를 등록하지 못했습니다."));
         }

@@ -22,8 +22,8 @@
     	useGeneratedKeys="true"
         keyProperty="userProblemSetId"
     	>
-        INSERT INTO user_problem_set (member_id)
-        VALUES (#{memberId})
+        INSERT INTO user_problem_set (member_id, category, problem_set_title, created_at)
+        VALUES (#{memberId}, #{category}, #{problemSetTitle}, #{createdAt})
     </insert>
 
     <!-- 문제세트 삭제 -->

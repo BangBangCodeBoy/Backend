@@ -24,9 +24,7 @@ public class QuizRoomController {
     }
 
     //호스트 - 퀴즈방 만들기
-    //TODO : 테스트용으로 memberId를 PathVariable로 넘김
     @PostMapping("/create")
-    //TODO : 로그인 구현되면 memberId를 requestBody로 넘기지 말고 세션에서 가져오도록 하기
     public ResponseEntity<ApiResponse<Long>> createQuizRoom(@AuthenticationPrincipal CustomUserDetails loginUser) {
         try {
             Long memberId = loginUser.getMemberId();
@@ -51,7 +49,6 @@ public class QuizRoomController {
 
     //채팅방 참여하기
     @PostMapping("/join/{roomId}")
-    //TODO : 로그인 구현되면 memberId를 requestBody로 넘기지 말고 세션에서 가져오도록 하기
     public ResponseEntity<ApiResponse<String>> joinQuizRoom(@PathVariable Long roomId, @AuthenticationPrincipal CustomUserDetails loginUser) {
         Long memberId = loginUser.getMemberId();
         try {

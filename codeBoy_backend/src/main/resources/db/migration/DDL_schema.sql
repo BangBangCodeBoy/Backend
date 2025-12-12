@@ -2,24 +2,15 @@
 -- Mon Nov 24 16:21:44 2025
 -- Model: New Model    Version: 1.0
 -- MySQL Workbench Forward Engineering
- -- DROP DATABASE IF EXISTS board_test;
--- CREATE DATABASE board_test;
+ DROP DATABASE IF EXISTS board_test;
+ CREATE DATABASE board_test;
  USE board_test;
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
--- -----------------------------------------------------
--- Schema mydb
--- -----------------------------------------------------
--- -----------------------------------------------------
--- Schema board_test
--- -----------------------------------------------------
 
--- -----------------------------------------------------
--- Schema board_test
--- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `board_test` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 USE board_test;
 
@@ -51,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `board_test`.`user_problem_set` (
   `member_id` BIGINT NOT NULL,
   `category` VARCHAR(50) NOT NULL,
   `comment_count` INT NOT NULL DEFAULT 0,
-  `title` VARCHAR(50) NOT NULL,
+  `problem_set_title` VARCHAR(50) NOT NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT NOW(),
   PRIMARY KEY (`user_problem_set_id`),
   INDEX `FK_member_TO_user_problem_set_1` (`member_id` ASC) VISIBLE,
@@ -86,6 +77,7 @@ DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
+
 -- -----------------------------------------------------
 -- Table `board_test`.`problem`
 -- -----------------------------------------------------
@@ -96,7 +88,7 @@ CREATE TABLE IF NOT EXISTS `board_test`.`problem` (
   `choice_2` VARCHAR(255) NOT NULL,
   `choice_3` VARCHAR(255) NOT NULL,
   `choice_4` VARCHAR(255) NOT NULL,
-  `answer` INT NOT NULL,
+  `answer_choice` TINYINT NOT NULL,
   `category` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`problem_id`))
 ENGINE = InnoDB
@@ -189,13 +181,11 @@ ADD CONSTRAINT FK_quiz_room_TO_quiz_room_member_1
 CREATE TABLE IF NOT EXISTS `board_test`.`user_problem` (
   `user_problem_id` BIGINT NOT NULL AUTO_INCREMENT,
   `problem_description` VARCHAR(300) NOT NULL,
-  -- `category` VARCHAR(50) NOT NULL,
   `choice_1` VARCHAR(255) NOT NULL,
   `choice_2` VARCHAR(255) NOT NULL,
   `choice_3` VARCHAR(255) NOT NULL,
   `choice_4` VARCHAR(255) NOT NULL,
-  `answer` INT NOT NULL,
-  -- `comment_count` INT NOT NULL DEFAULT 0,
+   `answer_choice` TINYINT NOT NULL,
   `user_problem_set_id` BIGINT NOT NULL,
   PRIMARY KEY (`user_problem_id`),
   INDEX `FK_user_problem_set_TO_user_problem_1` (`user_problem_set_id` ASC) VISIBLE,

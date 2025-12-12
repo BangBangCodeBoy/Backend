@@ -54,6 +54,20 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.failure(HttpStatus.BAD_REQUEST, e.getMessage()));
         }
     }
+//특정 회원 조회
+    @GetMapping("/{memberId}")
+    public ResponseEntity<ApiResponse<Member>> getOneMemberInfo( @PathVariable Long memberId) {
+        try {
+            Member member = memberService.getMemberById(memberId);
+            return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(HttpStatus.OK, "회원정보가 조회되었습니다", member));
+
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.failure(HttpStatus.NOT_FOUND, e.getMessage()));
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.failure(HttpStatus.BAD_REQUEST, e.getMessage()));
+        }
+    }
 
     //회원 탈퇴
     @DeleteMapping

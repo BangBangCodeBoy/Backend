@@ -87,6 +87,10 @@ public class UserProblemSetController {
             //UserProblemSetMapper에도 generateKey를 추가해서 PK값을 set에 담을 수 있었다.
             UserProblemSet set = new UserProblemSet();
             set.setMemberId(memberId);
+            set.setCategory(problemSetRequest.getCategory());
+            set.setCreatedAt(problemSetRequest.getCreatedAt());
+            set.setProblemSetTitle(problemSetRequest.getProblemSetTitle());
+
 
             int result = userProblemSetService.createUserProblemSet(set);
             Long userProblemSetId = set.getUserProblemSetId();

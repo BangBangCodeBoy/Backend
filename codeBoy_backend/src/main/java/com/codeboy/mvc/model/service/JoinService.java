@@ -1,7 +1,9 @@
 package com.codeboy.mvc.model.service;
 
 import com.codeboy.mvc.model.dao.MemberDao;
+import com.codeboy.mvc.model.dao.UserScoreDao;
 import com.codeboy.mvc.model.dto.Member;
+import com.codeboy.mvc.model.dto.UserScore;
 import com.codeboy.mvc.model.dto.request.JoinRequest;
 import com.codeboy.mvc.model.dto.request.LoginRequest;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 public class JoinService {
 
     private final MemberDao memberDao;
+    private final UserScoreDao userScoreDao;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public Long joinProcess(JoinRequest req) {
@@ -38,7 +41,15 @@ public class JoinService {
         if (rows != 1) {
             throw new IllegalStateException("회원 가입에 실패했습니다. (insert rows = " + rows + ")");
         }
+        //회원가입에 성공했다면 score에 0점 넣기
+        UserScore userScore = new UserScore();
+        userScore.setMemberId(member.getMemberId());
+        userScore.setScore(0);
 
+        int scoreRows = userScoreDao.insertScore(userScore);
+        if (scoreRows != 1) {
+            throw new IllegalStateException("초기 점수 등록에 실패했습니다");
+        }
         return member.getMemberId();
     }
 }

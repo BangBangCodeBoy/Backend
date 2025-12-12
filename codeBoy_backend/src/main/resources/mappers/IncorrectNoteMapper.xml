@@ -12,8 +12,7 @@
             p.choice_2 AS choice2,
             p.choice_3 AS choice3,
             p.choice_4 AS choice4,
-            p.answer,
-            p.category
+            p.answer_choice
             FROM incorrect_note inote
             JOIN problem p ON inote.problem_id = p.problem_id
             WHERE inote.member_id = #{memberId}
@@ -26,8 +25,7 @@
             u.choice_2 AS choice2,
             u.choice_3 AS choice3,
             u.choice_4 AS choice4,
-            u.answer,
-            u.category
+            u.answer_choice
             FROM incorrect_note inote
             JOIN user_problem u ON inote.user_problem_id = u.user_problem_id
             WHERE inote.member_id = #{memberId}

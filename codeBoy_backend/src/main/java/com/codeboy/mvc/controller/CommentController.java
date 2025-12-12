@@ -81,9 +81,8 @@ public class CommentController {
 
 
     //리소스의 일부(content)만 수정하므로 패치매핑
-    @PatchMapping("{userProblemSetId}/{commentId}")
+    @PatchMapping("{commentId}")
     public ResponseEntity<ApiResponse<Void>> updateComment(
-            @PathVariable long userProblemSetId,
             @PathVariable long commentId,
             @RequestBody CommentUpdateRequest commentUpdateRequest,
             @AuthenticationPrincipal CustomUserDetails loginUser) {
