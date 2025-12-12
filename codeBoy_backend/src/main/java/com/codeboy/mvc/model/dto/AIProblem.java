@@ -22,5 +22,5 @@ public class AIProblem {
     private String choice3;
     private String choice4;
     private int answer;            // 정답 인덱스 (0~3)	
-    private String category;
+    private Category category;
 }

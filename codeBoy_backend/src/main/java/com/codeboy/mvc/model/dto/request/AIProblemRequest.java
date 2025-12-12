@@ -10,6 +10,8 @@ import lombok.ToString;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class AIProblemRequest {
     private String category;   // 정보처리기사 or SQLD
+    private String detailPrompt;
 }

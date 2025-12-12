@@ -26,13 +26,15 @@ public class AIProblemServiceImpl implements AIProblemService {
 
         String category = request.getCategory();
        
-       
+         
         String prompt = """
                 너는 %s 과목의 4지선다 객관식 문제를 출제하는 출제자다.
                 아래 조건을 반드시 지켜라.
 
                 [조건]
-                - 총 1개의 문제를 만든다.
+                - 총 10개의 문제를 만든다.
+                - 사용자가 제시한 프롬프트를 보고 비어있지 않다면 이에 맞춤형 문제를 제작하라. 프롬프트는 다음과 같다.
+                프롬프트: %s
                 - 각 문제는 하나의 정답만 가진다.
                 - 각 문제마다 보기는 choice1, choice2, choice3, choice4 정확히 4개이다.
                 - 정답 인덱스(answer)는 1,2,3,4 중 하나이다.
@@ -50,8 +52,8 @@ public class AIProblemServiceImpl implements AIProblemService {
                   }
                 ]
 
-                이제 %s 과목의 기출/개념을 바탕으로 위 형식의 문제 1개를 생성해라.
-                """.formatted(category, category, category);
+                이제 %s 과목의 기출/개념을 바탕으로 위 형식의 문제 10개를 생성해라.
+                """.formatted(category, request.getDetailPrompt(), category, category);
 
         String jsonContent = gmsClient.requestQuestionsFromGms(prompt);
 

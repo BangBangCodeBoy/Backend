@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,7 +12,6 @@ import com.codeboy.mvc.model.dto.AIProblem;
 import com.codeboy.mvc.model.dto.request.AIProblemRequest;
 import com.codeboy.mvc.model.service.AIProblemService;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
@@ -31,7 +31,6 @@ public class AIProblemController {
 	    System.out.println("request 객체: " + request);
 	    if (request != null) {
 	    	request.setCategory("정보처리기사");
-	        System.out.println("request.getCategory(): " + request.getCategory());
 	    } else {
 	        System.out.println("request가 null입니다");
 	    }
