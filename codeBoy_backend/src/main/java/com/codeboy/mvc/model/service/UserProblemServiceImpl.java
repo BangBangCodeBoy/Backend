@@ -33,6 +33,7 @@ public class UserProblemServiceImpl implements UserProblemService {
         if (userProblem == null || userProblem.getUserProblemId() == null) {
             throw new IllegalArgumentException("수정할 문제를 찾을 수 없습니다. 문제Id를 확인하세요.");
         }
+        System.out.println("디버깅2");
         return userProblemDao.updateUserProblem(userProblem);
     }
 

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.crypto.spec.PSource;
 import java.util.List;
 
 @RestController
@@ -107,7 +108,9 @@ public class UserProblemController {
         try {
             userProblem.setUserProblemId(userProblemId);
 
+            System.out.println("수정요청 받은 문제: " + userProblem);
             int result = userProblemService.updateUserProblem(userProblem);
+            System.out.println("디버깅1");
 
             if (result == 0) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)

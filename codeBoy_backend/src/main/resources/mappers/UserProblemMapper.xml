@@ -35,13 +35,11 @@
     <update id="updateUserProblem">
         UPDATE user_problem
         SET problem_description = #{problemDescription},
-            category = #{category},
             choice_1 = #{choice1},
             choice_2 = #{choice2},
             choice_3 = #{choice3},
             choice_4 = #{choice4},
-            answer = #{answer},
-            comment_count = #{commentCount}
+            answer_choice = #{answerChoice}
         WHERE user_problem_id = #{userProblemId}
     </update>
     
