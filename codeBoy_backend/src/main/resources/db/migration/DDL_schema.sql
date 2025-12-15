@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS `board_test`.`user_problem_set` (
   CONSTRAINT `FK_member_TO_user_problem_set_1`
     FOREIGN KEY (`member_id`)
     REFERENCES `board_test`.`member` (`member_id`))
+    
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
@@ -123,7 +124,7 @@ CREATE TABLE IF NOT EXISTS `board_test`.`incorrect_note` (
   CONSTRAINT `FK_user_problem_TO_incorrect_note_1`
     FOREIGN KEY (`user_problem_id`)
     REFERENCES `board_test`.`user_problem` (`user_problem_id`),
-
+    
     CHECK (
         (is_user_problem= 0 AND problem_id IS NOT NULL AND user_problem_id IS NULL) OR
         (is_user_problem= 1 AND user_problem_id IS NOT NULL AND problem_id IS NULL)
@@ -191,7 +192,10 @@ CREATE TABLE IF NOT EXISTS `board_test`.`user_problem` (
   INDEX `FK_user_problem_set_TO_user_problem_1` (`user_problem_set_id` ASC) VISIBLE,
   CONSTRAINT `FK_user_problem_set_TO_user_problem_1`
     FOREIGN KEY (`user_problem_set_id`)
-    REFERENCES `board_test`.`user_problem_set` (`user_problem_set_id`))
+    REFERENCES `board_test`.`user_problem_set` (`user_problem_set_id`)
+    ON DELETE CASCADE
+    )
+    
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;

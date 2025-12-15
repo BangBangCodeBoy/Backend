@@ -124,6 +124,7 @@ public class UserProblemSetController {
                     .body(ApiResponse.failure(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."));
         }
 
+        System.out.println("삭제할 문제 세트 id: "+ userProblemSetId);
         // TODO: userProblemSetId가 memberId가 만든 세트인지 owner 체크 로직을 Service/Dao에 추가하면 더 안전함
 
         try {
