@@ -1,7 +1,9 @@
 package com.codeboy.mvc.model.dto;
 
 import java.sql.Timestamp;
+
 import com.codeboy.common.Status;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,7 +22,10 @@ public class Member {
     private String nickname;
     private String email;
     private Timestamp signupDate;
-    private Status status;
+    private Boolean isActive;
     private Timestamp deletedDate;
+	private String role;
+
+
 
 }

@@ -14,14 +14,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserProblem {
-	private long userProblemId;
+	private Long userProblemId;
 	private String problemDescription;
-	private Category category;
 	private String choice1;
 	private String choice2;
 	private String choice3;
 	private String choice4;
-	private String answer;
-	private int commentCount;
-	private long userProblemSetId;
+    private int answerChoice;
+	private Long userProblemSetId;
 }

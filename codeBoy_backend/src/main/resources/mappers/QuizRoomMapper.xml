@@ -3,23 +3,24 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mappper namespace="com.codeboy.mvc.model.dao.QuizRoomDao">
+<mapper namespace="com.codeboy.mvc.model.dao.QuizRoomDao">
 
 	<!-- 채팅방 생성 -->
 	<insert id="insertQuizRoom" useGeneratedKeys="true"
+            parameterType="QuizRoom"
 		keyProperty="roomId">
 		INSERT INTO
 		quiz_room()
 		VALUES();
 	</insert>
 
-
 	<!-- 채팅방 참가 -->
 	<insert id="insertMemberToQuizRoom"
-		parameterType="QuizRoomMember">
+		parameterType="QuizRoomMember"
+		>
 		INSERT INTO
 		quiz_room_member(member_id, room_id, is_host)
-		VALUES(#{memberId, roomId, isHost});
+		VALUES(#{memberId}, #{roomId}, #{isHost});
 	</insert>
 
 
@@ -31,21 +32,57 @@
 	</select>
 
 	<!-- 하나의 퀴즈룸 조회 -->
-	<select id="selectOneQuizRoom" resultType="QuizRoomMember"
+	<select id="selectOneQuizRoom" resultType="GetQuizRoomMembersResponse"
 		parameterType="long">
-		SELECT *
-		FROM quiz_room_member
-		WHERE room_id = #{roomId}
+		SELECT
+            qrm.member_id AS memberId,
+            m.nickname
+		FROM quiz_room_member qrm
+        JOIN member m ON qrm.member_id = m.member_id
+		WHERE qrm.room_id = #{roomId}
 	</select>
 
 	<!-- 퀴즈룸 삭제 -->
-	<delete id="deleteQuizRoom" parameterType="long">
-		DELETE FROM quiz_room_member
-		WHERE room_id = #{roomId}
-
+    <delete id="deleteQuizRoom" parameterType="long">
 		DELETE FROM quiz_room
 		WHERE room_id = #{roomId};
 	</delete>
 
+<!--    퀴즈룸 존재 확인-->
+    <select id="existsQuizRoom" parameterType="long" resultType="int">
+        SELECT COUNT(*)
+        FROM quiz_room
+        WHERE room_id = #{roomId}
+    </select>
 
-</mappper>
+<!--    //멤버 존재 확인 -->
+    <select id="isDuplicatedMember" parameterType="long" resultType="int">
+        SELECT COUNT(1)
+        FROM quiz_room_member
+        WHERE member_id = #{memberId}
+    </select>
+
+    <!-- 특정 방 + 특정 멤버 1명 조회 -->
+    <select id="selectQuizRoomMember"
+            parameterType="map"
+            resultType="com.codeboy.mvc.model.dto.QuizRoomMember">
+        SELECT
+        room_id  AS roomId,
+        member_id AS memberId,
+        is_host  AS isHost
+        FROM quiz_room_member
+        WHERE room_id = #{roomId}
+        AND member_id = #{memberId}
+        LIMIT 1
+    </select>
+
+    <!-- 특정 방에서 특정 멤버 삭제 (퇴장) -->
+    <delete id="deleteQuizRoomMember" parameterType="map">
+        DELETE FROM quiz_room_member
+        WHERE room_id = #{roomId}
+        AND member_id = #{memberId}
+    </delete>
+
+
+
+</mapper>

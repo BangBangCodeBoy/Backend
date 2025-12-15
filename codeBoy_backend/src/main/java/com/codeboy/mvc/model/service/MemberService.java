@@ -1,19 +1,31 @@
 package com.codeboy.mvc.model.service;
 
 import com.codeboy.mvc.model.dto.Member;
-import com.codeboy.mvc.model.dto.MemberUpdateRequest;
-import com.codeboy.mvc.model.dto.MemberUpdateRequest;
+import com.codeboy.mvc.model.dto.request.MemberUpdateRequest;
 
 public interface MemberService {
-    //회원가입
-	public void signupMember();
 
-	//회원 정보 가져오기기
-    public Member readMember(String id, String password);
+    // 회원정보 조회
+    Member getMemberById(Long memberId);
 
-	//회원 탈퇴 
-    public void withdrawal(int memberId);
+    // 회원 탈퇴
+    void deactivateMember(Long memberId);
+
+    // 회원 정보 수정
+    void updateMember(Long memberId, MemberUpdateRequest memberUpdateRequest);
+
+    // 중복검사 (ID)
+    boolean checkIdDuplicate(String id);
+
+    // 중복검사 (Nickname)
+    boolean checkNicknameDuplicate(String nickname);
+
+    // 중복검사 (Email)
+    boolean checkEmailDuplicate(String email);
+
+    int signUp(Member member);
     
-    //회원정보 수정-> db에서는 patch(nickname, email, id)
-    public void updateMember(long memberId, MemberUpdateRequest memberUpdateRequest);
+    
+    // 로그인
+    Member login(String id, String password);
 }

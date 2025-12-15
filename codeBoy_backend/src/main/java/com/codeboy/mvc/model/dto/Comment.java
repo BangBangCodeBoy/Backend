@@ -13,7 +13,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Comment {
+public class
+Comment {
 	private long commentId;
 	private long memberId;
 	private String content;
